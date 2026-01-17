@@ -125,7 +125,7 @@ function StudentsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando Alunos...</span>
+        <span className="ml-2">Loading students...</span>
       </div>
     );
   }
@@ -134,10 +134,10 @@ function StudentsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <p className="text-red-600 text-lg mb-2">Erro ao carregar Alunos</p>
+          <p className="text-red-600 text-lg mb-2">Error loading students</p>
           <p className="text-gray-600">
             {(error as any)?.response?.data?.detail ||
-              "Tente novamente mais tarde"}
+              "Please try again later"}
           </p>
         </div>
       </div>
@@ -148,11 +148,11 @@ function StudentsPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Alunos</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Students</h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
             {isAdmin
-              ? "Gerencie todos os estudantes da plataforma"
-              : "Visualize seu perfil de estudante"}
+              ? "Manage all students on the platform"
+              : "View your student profile"}
           </p>
         </div>
         {isAdmin && (
@@ -161,7 +161,7 @@ function StudentsPage() {
             className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Novo Aluno
+            New Student
           </Button>
         )}
       </div>
@@ -170,13 +170,13 @@ function StudentsPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Lista de Alunos</CardTitle>
+              <CardTitle>Student List</CardTitle>
             </div>
             <div className="flex items-center gap-2">
               <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar estudantes..."
+                  placeholder="Search students..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -191,8 +191,8 @@ function StudentsPage() {
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
                 {searchQuery
-                  ? "Nenhum estudante encontrado com essa busca"
-                  : "Nenhum estudante cadastrado ainda"}
+                  ? "No student found with this search"
+                  : "No students registered yet"}
               </p>
             </div>
           ) : (
@@ -201,10 +201,10 @@ function StudentsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Estudante</TableHead>
+                  <TableHead>Student</TableHead>
                   <TableHead>Username</TableHead>
-                  <TableHead>Contato</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>Contact</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -225,7 +225,7 @@ function StudentsPage() {
                           <div className="font-medium">{student.name}</div>
                           {!isAdmin && (
                             <Badge className="mt-1 bg-blue-100 text-blue-700">
-                              Você
+                              You
                             </Badge>
                           )}
                         </div>
@@ -258,7 +258,7 @@ function StudentsPage() {
                             size="icon"
                             className="h-8 w-8"
                             onClick={() => handleEdit(student)}
-                            title="Editar estudante"
+                            title="Edit student"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -269,7 +269,7 @@ function StudentsPage() {
                             size="icon"
                             className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                             onClick={() => handleDelete(student)}
-                            title="Excluir estudante"
+                            title="Delete student"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -297,8 +297,8 @@ function StudentsPage() {
       <DeleteConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Excluir Estudante"
-        description="Tem certeza que deseja excluir este estudante? Esta ação não pode ser desfeita."
+        title="Delete Student"
+        description="Are you sure you want to delete this student? This action cannot be undone."
         itemName={selectedStudent?.name}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}

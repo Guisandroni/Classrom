@@ -153,7 +153,7 @@ function ResourcesPage() {
         return (
           <Badge className="bg-blue-100 text-blue-700">
             <Video className="h-3 w-3 mr-1" />
-            Vídeo
+            Video
           </Badge>
         );
       case "pdf":
@@ -179,7 +179,7 @@ function ResourcesPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando recursos...</span>
+        <span className="ml-2">Loading resources...</span>
       </div>
     );
   }
@@ -188,17 +188,17 @@ function ResourcesPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Recursos</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Resources</h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Gerencie todos os recursos e materiais das turmas
+            Manage all resources and materials for classes
           </p>
         </div>
-        <Button 
+        <Button
           onClick={handleCreate}
           className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Novo Recurso
+          New Resource
         </Button>
       </div>
 
@@ -206,16 +206,16 @@ function ResourcesPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Lista de Recursos</CardTitle>
+              <CardTitle>Resource List</CardTitle>
               <CardDescription>
-                {resources?.length || 0} recursos cadastrados
+                {resources?.length || 0} resources registered
               </CardDescription>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar recursos..."
+                  placeholder="Search resources..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -223,11 +223,11 @@ function ResourcesPage() {
               </div>
               <Select value={filterType} onValueChange={setFilterType}>
                 <SelectTrigger className="w-full sm:w-[150px]">
-                  <SelectValue placeholder="Tipo" />
+                  <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="video">Vídeo</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="video">Video</SelectItem>
                   <SelectItem value="pdf">PDF</SelectItem>
                   <SelectItem value="zip">ZIP</SelectItem>
                 </SelectContent>
@@ -241,8 +241,8 @@ function ResourcesPage() {
               <File className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
                 {searchQuery || filterType !== "all"
-                  ? "Nenhum recurso encontrado"
-                  : "Nenhum recurso cadastrado ainda"}
+                  ? "No resource found"
+                  : "No resources registered yet"}
               </p>
             </div>
           ) : (
@@ -251,11 +251,11 @@ function ResourcesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Turma</TableHead>
-                  <TableHead>Tipo</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -281,7 +281,7 @@ function ResourcesPage() {
                           {resource.resource_name}
                           {resource.resource_type === "video" && (
                             <Badge variant="outline" className="text-xs">
-                              Clique para assistir
+                              Click to watch
                             </Badge>
                           )}
                         </div>
@@ -303,7 +303,7 @@ function ResourcesPage() {
                         </Badge>
                       ) : (
                         <Badge className="bg-green-100 text-green-700">
-                          Publicado
+                          Published
                         </Badge>
                       )}
                     </TableCell>
@@ -317,7 +317,7 @@ function ResourcesPage() {
                             e.stopPropagation();
                             handleEdit(resource);
                           }}
-                          title="Editar recurso"
+                          title="Edit resource"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -329,7 +329,7 @@ function ResourcesPage() {
                             e.stopPropagation();
                             handleDelete(resource);
                           }}
-                          title="Excluir recurso"
+                          title="Delete resource"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -356,8 +356,8 @@ function ResourcesPage() {
       <DeleteConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Excluir Recurso"
-        description="Tem certeza que deseja excluir este recurso? Esta ação não pode ser desfeita."
+        title="Delete Resource"
+        description="Are you sure you want to delete this resource? This action cannot be undone."
         itemName={selectedResource?.resource_name}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}

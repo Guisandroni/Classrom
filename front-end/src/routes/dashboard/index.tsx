@@ -93,21 +93,21 @@ function DashboardIndex() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
-          Dashboard {isAdmin ? "Administrativo" : "do Estudante"}
+          {isAdmin ? "Admin Dashboard" : "Student Dashboard"}
         </h1>
         <p className="text-gray-600 mt-1">
           {meLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Carregando...
+              Loading...
             </span>
           ) : me ? (
             <>
-              Bem-vindo de volta, <strong>{me.name}</strong>! Aqui está o resumo
-              de hoje.
+              Welcome back, <strong>{me.name}</strong>! Here's your summary for
+              today.
             </>
           ) : (
-            "Bem-vindo de volta! Aqui está o resumo de hoje."
+            "Welcome back! Here's your summary for today."
           )}
         </p>
       </div>
@@ -118,12 +118,12 @@ function DashboardIndex() {
         <Card>
           <CardHeader>
             <CardTitle>
-              {isAdmin ? "Matrículas Recentes" : "Minhas Matrículas"}
+              {isAdmin ? "Recent Enrollments" : "My Enrollments"}
             </CardTitle>
             <CardDescription>
               {enrollmentsLoading
-                ? "Carregando..."
-                : `${recentEnrollments.length} matrículas ${isAdmin ? "no sistema" : "ativas"}`}
+                ? "Loading..."
+                : `${recentEnrollments.length} ${isAdmin ? "enrollments in the system" : "active enrollments"}`}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -133,7 +133,7 @@ function DashboardIndex() {
               </div>
             ) : recentEnrollments.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <p>Nenhuma matrícula encontrada</p>
+                <p>No enrollments found</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -152,7 +152,7 @@ function DashboardIndex() {
                     </div>
                     <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
                       <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Ativo
+                      Active
                     </Badge>
                   </div>
                 ))}
@@ -164,11 +164,11 @@ function DashboardIndex() {
         {isAdmin && (
           <Card>
             <CardHeader>
-              <CardTitle>Estatísticas de Recursos</CardTitle>
+              <CardTitle>Resource Statistics</CardTitle>
               <CardDescription>
                 {resourcesLoading
-                  ? "Carregando..."
-                  : `${resources?.length || 0} recursos no total`}
+                  ? "Loading..."
+                  : `${resources?.length || 0} total resources`}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -180,7 +180,7 @@ function DashboardIndex() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600">Por Tipo</p>
+                      <p className="text-sm text-gray-600">By Type</p>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-2 bg-red-50 rounded">
                           <span className="text-sm font-medium">PDFs</span>
@@ -189,7 +189,7 @@ function DashboardIndex() {
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between p-2 bg-purple-50 rounded">
-                          <span className="text-sm font-medium">Vídeos</span>
+                          <span className="text-sm font-medium">Videos</span>
                           <Badge className="bg-purple-100 text-purple-700">
                             {resourcesByType.video}
                           </Badge>
@@ -203,18 +203,18 @@ function DashboardIndex() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600">Por Status</p>
+                      <p className="text-sm text-gray-600">By Status</p>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-2 bg-green-50 rounded">
                           <span className="text-sm font-medium">
-                            Publicados
+                            Published
                           </span>
                           <Badge className="bg-green-100 text-green-700">
                             {resourcesByType.published}
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span className="text-sm font-medium">Rascunhos</span>
+                          <span className="text-sm font-medium">Drafts</span>
                           <Badge className="bg-gray-100 text-gray-700">
                             {resourcesByType.drafts}
                           </Badge>
@@ -232,11 +232,11 @@ function DashboardIndex() {
       {!isAdmin && displayedClassGroups && displayedClassGroups.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Minhas Turmas</CardTitle>
+            <CardTitle>My Classes</CardTitle>
             <CardDescription>
               {classGroupsLoading
-                ? "Carregando..."
-                : `${displayedClassGroups.length} turmas matriculadas`}
+                ? "Loading..."
+                : `${displayedClassGroups.length} enrolled classes`}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -262,19 +262,19 @@ function DashboardIndex() {
                         <Badge variant="outline">#{classGroup.id}</Badge>
                       </div>
                       <p className="text-sm text-gray-600 mb-2">
-                        <strong>Treinamento:</strong> {training?.name || "N/A"}
+                        <strong>Training:</strong> {training?.name || "N/A"}
                       </p>
                       <div className="text-xs text-gray-500 space-y-1">
                         <p>
-                          Início:{" "}
+                          Start:{" "}
                           {new Date(classGroup.start_date).toLocaleDateString(
-                            "pt-BR",
+                            "en-US",
                           )}
                         </p>
                         <p>
-                          Término:{" "}
+                          End:{" "}
                           {new Date(classGroup.end_date).toLocaleDateString(
-                            "pt-BR",
+                            "en-US",
                           )}
                         </p>
                       </div>

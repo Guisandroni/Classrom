@@ -101,7 +101,7 @@ function TrainingsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando treinamentos...</span>
+        <span className="ml-2">Loading trainings...</span>
       </div>
     );
   }
@@ -110,17 +110,17 @@ function TrainingsPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Treinamentos</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Trainings</h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Gerencie todos os treinamentos disponíveis
+            Manage all available trainings
           </p>
         </div>
-        <Button 
+        <Button
           onClick={handleCreate}
           className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Novo Treinamento
+          New Training
         </Button>
       </div>
 
@@ -128,15 +128,15 @@ function TrainingsPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Lista de Treinamentos</CardTitle>
+              <CardTitle>Training List</CardTitle>
               <CardDescription>
-                {trainings?.length || 0} treinamentos cadastrados
+                {trainings?.length || 0} trainings registered
               </CardDescription>
             </div>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Buscar treinamentos..."
+                placeholder="Search trainings..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -150,8 +150,8 @@ function TrainingsPage() {
               <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
                 {searchQuery
-                  ? "Nenhum treinamento encontrado"
-                  : "Nenhum treinamento cadastrado ainda"}
+                  ? "No training found"
+                  : "No trainings registered yet"}
               </p>
             </div>
           ) : (
@@ -160,9 +160,9 @@ function TrainingsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Descrição</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -186,7 +186,7 @@ function TrainingsPage() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleEdit(training)}
-                          title="Editar treinamento"
+                          title="Edit training"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -195,7 +195,7 @@ function TrainingsPage() {
                           size="icon"
                           className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                           onClick={() => handleDelete(training)}
-                          title="Excluir treinamento"
+                          title="Delete training"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -221,8 +221,8 @@ function TrainingsPage() {
       <DeleteConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Excluir Treinamento"
-        description="Tem certeza que deseja excluir este treinamento? Esta ação não pode ser desfeita e todas as turmas relacionadas podem ser afetadas."
+        title="Delete Training"
+        description="Are you sure you want to delete this training? This action cannot be undone and all related classes may be affected."
         itemName={selectedTraining?.name}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}

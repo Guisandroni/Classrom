@@ -66,7 +66,7 @@ function ClassGroupsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando turmas...</span>
+        <span className="ml-2">Loading classes...</span>
       </div>
     );
   }
@@ -96,7 +96,7 @@ function ClassGroupsPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
+    return date.toLocaleDateString("en-US", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -109,20 +109,20 @@ function ClassGroupsPage() {
         return (
           <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
             <Clock className="h-3 w-3 mr-1" />
-            Em Andamento
+            In Progress
           </Badge>
         );
       case "upcoming":
         return (
           <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
             <Calendar className="h-3 w-3 mr-1" />
-            Próxima
+            Upcoming
           </Badge>
         );
       case "completed":
         return (
           <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
-            Concluída
+            Completed
           </Badge>
         );
       default:
@@ -167,7 +167,7 @@ function ClassGroupsPage() {
             setSelectedClassGroup(null);
           },
           onError: (error) => {
-            console.error("Erro ao atualizar turma:", error);
+            console.error("Error updating class:", error);
           },
         },
       );
@@ -178,7 +178,7 @@ function ClassGroupsPage() {
           setSelectedClassGroup(null);
         },
         onError: (error) => {
-          console.error("Erro ao criar turma:", error);
+          console.error("Error creating class:", error);
         },
       });
     }
@@ -200,9 +200,9 @@ function ClassGroupsPage() {
       <div className="space-y-4 md:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Turmas</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Classes</h1>
             <p className="text-gray-600 mt-1 text-sm sm:text-base">
-              Nenhuma turma disponível no momento
+              No classes available at the moment
             </p>
           </div>
           <Button
@@ -210,14 +210,14 @@ function ClassGroupsPage() {
             className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Nova Turma
+            New Class
           </Button>
         </div>
         <Card>
           <CardContent className="py-12 text-center">
             <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500">
-              As turmas aparecerão aqui quando forem criadas
+              Classes will appear here when created
             </p>
           </CardContent>
         </Card>
@@ -233,8 +233,8 @@ function ClassGroupsPage() {
         <DeleteConfirmDialog
           open={deleteOpen}
           onOpenChange={setDeleteOpen}
-          title="Excluir Turma"
-          description="Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos."
+          title="Delete Class"
+          description="Are you sure you want to delete this class? This action cannot be undone and all related data will be lost."
           itemName={selectedClassGroup?.name}
           onConfirm={handleDeleteConfirm}
           isLoading={deleteMutation.isPending}
@@ -247,9 +247,9 @@ function ClassGroupsPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Turmas</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Classes</h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Gerencie todas as turmas e seus treinamentos
+            Manage all classes and their trainings
           </p>
         </div>
         <Button
@@ -257,7 +257,7 @@ function ClassGroupsPage() {
           className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Nova Turma
+          New Class
         </Button>
       </div>
 
@@ -265,16 +265,16 @@ function ClassGroupsPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Lista de Turmas</CardTitle>
+              <CardTitle>Class List</CardTitle>
               <CardDescription>
-                {enrichedClassGroups.length} turmas cadastradas
+                {enrichedClassGroups.length} classes registered
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar turmas..."
+                  placeholder="Search classes..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -288,8 +288,8 @@ function ClassGroupsPage() {
             <div className="text-center py-12">
               <p className="text-gray-500">
                 {searchQuery
-                  ? "Nenhuma turma encontrada com esses filtros"
-                  : "Nenhuma turma cadastrada ainda"}
+                  ? "No class found with these filters"
+                  : "No classes registered yet"}
               </p>
             </div>
           ) : (
@@ -298,12 +298,12 @@ function ClassGroupsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Nome da Turma</TableHead>
-                  <TableHead>Treinamento</TableHead>
-                  <TableHead>Periodo</TableHead>
-                  <TableHead>Alunos</TableHead>
+                  <TableHead>Class Name</TableHead>
+                  <TableHead>Training</TableHead>
+                  <TableHead>Period</TableHead>
+                  <TableHead>Students</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -316,7 +316,7 @@ function ClassGroupsPage() {
                       <div className="space-y-1">
                         <div className="font-medium">{classGroup.name}</div>
                         <div className="text-xs text-gray-500">
-                          ID Turma: {classGroup.id}
+                          Class ID: {classGroup.id}
                         </div>
                       </div>
                     </TableCell>
@@ -340,7 +340,7 @@ function ClassGroupsPage() {
                           {formatDate(classGroup.start_date)}
                         </div>
                         <div className="text-sm text-gray-500">
-                          até {formatDate(classGroup.end_date)}
+                          to {formatDate(classGroup.end_date)}
                         </div>
                       </div>
                     </TableCell>
@@ -351,8 +351,7 @@ function ClassGroupsPage() {
                           {classGroup.enrollmentCount}
                         </span>
                         <span className="text-xs text-gray-500">
-                          matriculado
-                          {classGroup.enrollmentCount !== 1 ? "s" : ""}
+                          enrolled
                         </span>
                       </div>
                     </TableCell>
@@ -364,7 +363,7 @@ function ClassGroupsPage() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleEdit(classGroup)}
-                          title="Editar turma"
+                          title="Edit class"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -373,7 +372,7 @@ function ClassGroupsPage() {
                           size="icon"
                           className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                           onClick={() => handleDelete(classGroup)}
-                          title="Excluir turma"
+                          title="Delete class"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -400,13 +399,13 @@ function ClassGroupsPage() {
       <DeleteConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Excluir Turma"
-        description="Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos."
+        title="Delete Class"
+        description="Are you sure you want to delete this class? This action cannot be undone and all related data will be lost."
         itemName={selectedClassGroup?.name}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}
       />
-     
+
     </div>
   );
 }

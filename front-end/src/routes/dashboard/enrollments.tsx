@@ -125,7 +125,7 @@ function EnrollmentsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando matrículas...</span>
+        <span className="ml-2">Loading enrollments...</span>
       </div>
     );
   }
@@ -134,9 +134,9 @@ function EnrollmentsPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Matrículas</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Enrollments</h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Gerencie as matrículas de alunos nas turmas
+            Manage student enrollments in classes
           </p>
         </div>
         <Button
@@ -144,7 +144,7 @@ function EnrollmentsPage() {
           className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Nova Matrícula
+          New Enrollment
         </Button>
       </div>
 
@@ -152,15 +152,15 @@ function EnrollmentsPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Lista de Matrículas</CardTitle>
+              <CardTitle>Enrollment List</CardTitle>
               <CardDescription>
-                {enrollments?.length || 0} matrículas cadastradas
+                {enrollments?.length || 0} enrollments registered
               </CardDescription>
             </div>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Buscar matrícula..."
+                placeholder="Search enrollment..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -174,8 +174,8 @@ function EnrollmentsPage() {
               <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">
                 {searchQuery
-                  ? "Nenhuma matrícula encontrada"
-                  : "Nenhuma matrícula cadastrada ainda"}
+                  ? "No enrollment found"
+                  : "No enrollments registered yet"}
               </p>
             </div>
           ) : (
@@ -184,10 +184,10 @@ function EnrollmentsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Aluno</TableHead>
-                  <TableHead>Turma</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Class</TableHead>
                   <TableHead>IDs</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -217,7 +217,7 @@ function EnrollmentsPage() {
                             {enrollment.class_group_name}
                           </div>
                           <div className="text-xs text-gray-500">
-                            ClassGroup ID: {enrollment.class_group}
+                            Class ID: {enrollment.class_group}
                           </div>
                         </div>
                       </div>
@@ -239,7 +239,7 @@ function EnrollmentsPage() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleEdit(enrollment)}
-                          title="Editar matrícula"
+                          title="Edit enrollment"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -248,7 +248,7 @@ function EnrollmentsPage() {
                           size="icon"
                           className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                           onClick={() => handleDelete(enrollment)}
-                          title="Excluir matrícula"
+                          title="Delete enrollment"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -277,8 +277,8 @@ function EnrollmentsPage() {
       <DeleteConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Excluir Matrícula"
-        description="Tem certeza que deseja excluir esta matrícula? O aluno perder irá acesso aos recursos desta turma."
+        title="Delete Enrollment"
+        description="Are you sure you want to delete this enrollment? The student will lose access to this class resources."
         itemName={
           selectedEnrollment
             ? `${selectedEnrollment.student_name} - ${selectedEnrollment.class_group_name}`

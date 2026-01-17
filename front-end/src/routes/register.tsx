@@ -44,32 +44,32 @@ function RegisterPage() {
     const newErrors: { [key: string]: string } = {};
 
     if (!formData.username.trim()) {
-      newErrors.username = "Usuário é obrigatório";
+      newErrors.username = "Username is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email é obrigatório";
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email inválido";
+      newErrors.email = "Invalid email";
     }
 
     if (formData.role === "student") {
       if (!formData.student_name.trim()) {
-        newErrors.student_name = "Nome completo é obrigatório";
+        newErrors.student_name = "Full name is required";
       }
       if (!formData.student_phone.trim()) {
-        newErrors.student_phone = "Telefone é obrigatório";
+        newErrors.student_phone = "Phone is required";
       }
     }
 
     if (!formData.password) {
-      newErrors.password = "Senha é obrigatória";
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
-      newErrors.password = "Senha deve ter no mínimo 8 caracteres";
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "As senhas não coincidem";
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -102,7 +102,7 @@ function RegisterPage() {
         error?.response?.data?.message ||
         error?.response?.data?.username?.[0] ||
         error?.response?.data?.email?.[0] ||
-        "Erro ao criar conta. Verifique os dados e tente novamente.";
+        "Error creating account. Please check your data and try again.";
       setErrorMessage(message);
     }
   };
@@ -123,34 +123,36 @@ function RegisterPage() {
       <div className="w-full max-w-md">
         <Card className="shadow-xl border-0">
           <CardHeader>
-            <CardTitle className="text-2xl">Criar Conta</CardTitle>
+            <CardTitle className="text-2xl">Create Account</CardTitle>
             <CardDescription>
-              Preencha os dados abaixo para se cadastrar
+              Fill in the details below to register
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {errorMessage && (
                 <ErrorAlert
-                  title="Erro ao criar conta"
+                  title="Error creating account"
                   message={errorMessage}
                   onClose={() => setErrorMessage("")}
                 />
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="username">Usuário</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
-                  id="username"
+                  id="name"
                   type="text"
-                  placeholder="joao_silva"
-                  value={formData.username}
-                  onChange={(e) => handleChange("username", e.target.value)}
-                  className={`h-11 ${errors.username ? "border-red-500" : ""}`}
+                  placeholder="Carlos"
+                  value={formData.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  className={`h-11 ${errors.name ? "border-red-500" : ""}`}
                   disabled={registerMutation.isPending}
                 />
-                {errors.username && (
-                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">{errors.username}</p>
+                {errors.name && (
+                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
+                    {errors.name}
+                  </p>
                 )}
               </div>
 
@@ -159,80 +161,21 @@ function RegisterPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="joao@email.com"
+                  placeholder="carlos@email.com"
                   value={formData.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                   className={`h-11 ${errors.email ? "border-red-500" : ""}`}
                   disabled={registerMutation.isPending}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">{errors.email}</p>
+                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
+                    {errors.email}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="role">Tipo de Conta</Label>
-                <Select
-                  value={formData.role}
-                  onValueChange={(value) => handleChange("role", value)}
-                  disabled={registerMutation.isPending}
-                >
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Selecione o tipo de conta" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="student">Aluno</SelectItem>
-                    <SelectItem value="admin">Administrador</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {formData.role === "student" && (
-                <>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="student_name">Nome Completo</Label>
-                    <Input
-                      id="student_name"
-                      type="text"
-                      placeholder="João Silva"
-                      value={formData.student_name}
-                      onChange={(e) =>
-                        handleChange("student_name", e.target.value)
-                      }
-                      className={`h-11 ${errors.student_name ? "border-red-500" : ""}`}
-                      disabled={registerMutation.isPending}
-                    />
-                    {errors.student_name && (
-                      <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
-                        {errors.student_name}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="student_phone">Telefone</Label>
-                    <Input
-                      id="student_phone"
-                      type="tel"
-                      placeholder="99 9999-9999"
-                      value={formData.student_phone}
-                      onChange={(e) =>
-                        handleChange("student_phone", e.target.value)
-                      }
-                      className={`h-11 ${errors.student_phone ? "border-red-500" : ""}`}
-                      disabled={registerMutation.isPending}
-                    />
-                    {errors.student_phone && (
-                      <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
-                        {errors.student_phone}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-
-              <div className="space-y-1.5">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -243,12 +186,14 @@ function RegisterPage() {
                   disabled={registerMutation.isPending}
                 />
                 {errors.password && (
-                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">{errors.password}</p>
+                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
+                    {errors.password}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -273,8 +218,8 @@ function RegisterPage() {
                 disabled={registerMutation.isPending}
               >
                 {registerMutation.isPending
-                  ? "Criando conta..."
-                  : "Criar Conta"}
+                  ? "Creating account..."
+                  : "Create Account"}
               </Button>
             </form>
           </CardContent>
@@ -284,17 +229,17 @@ function RegisterPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Ou</span>
+                <span className="bg-white px-2 text-gray-500">Or</span>
               </div>
             </div>
 
             <p className="text-center text-sm text-gray-600">
-              Já tem uma conta?{" "}
+              Already have an account?{" "}
               <Link
                 to="/login"
                 className="font-semibold text-blue-600 hover:text-blue-800 hover:underline"
               >
-                Entrar
+                Sign In
               </Link>
             </p>
           </CardFooter>
