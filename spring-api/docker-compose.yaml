@@ -1,6 +1,6 @@
 services:
   db:
-    image: 'postgres:latest'
+    image: 'postgres:16-alpine'
     container_name: ClassrommDB
     environment:
         POSTGRES_DB: class
