@@ -1,34 +1,43 @@
-package com.guisandroni.classroom.management.Entity;
+package com.guisandroni.classroom.management.Resource.Entity;
 
 import com.guisandroni.classroom.management.Class.Entity.Class;
-import com.guisandroni.classroom.management.Enum.ResourcesType;
+import com.guisandroni.classroom.management.Resource.Enum.ResourcesType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table (name = "resources")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "resources")
 public class Resource {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "class_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", nullable = false)
     private Class classEntity;
 
-    @Enumerated (EnumType.STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ResourcesType resourceType;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private Boolean previousAccess;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private Boolean draft;
 
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 500)
     private String description;
 }
 
