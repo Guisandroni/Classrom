@@ -78,18 +78,18 @@ export function EnrollmentForm({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === "edit" ? "Editar Matrícula" : "Nova Matrícula"}
+            {mode === "edit" ? "Edit Enrollment" : "New Enrollment"}
           </DialogTitle>
           <DialogDescription>
             {mode === "edit"
-              ? "Atualize a matrícula do aluno"
-              : "Matricule um aluno em uma turma"}
+              ? "Update the student enrollment"
+              : "Enroll a student in a class"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="student">Aluno </Label>
+              <Label htmlFor="student">Student </Label>
               <Select
                 value={
                   formData.student > 0 ? formData.student.toString() : undefined
@@ -100,7 +100,7 @@ export function EnrollmentForm({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um aluno" />
+                  <SelectValue placeholder="Select a student" />
                 </SelectTrigger>
                 <SelectContent>
                   {students.map((student) => (
@@ -112,7 +112,7 @@ export function EnrollmentForm({
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="class_group">Turma </Label>
+              <Label htmlFor="class_group">Class </Label>
               <Select
                 value={
                   formData.class_group > 0
@@ -128,7 +128,7 @@ export function EnrollmentForm({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma turma" />
+                  <SelectValue placeholder="Select a class" />
                 </SelectTrigger>
                 <SelectContent>
                   {classGroups.map((classGroup) => (
@@ -150,7 +150,7 @@ export function EnrollmentForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -158,7 +158,7 @@ export function EnrollmentForm({
               className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {mode === "edit" ? "Atualizar" : "Matricular"}
+              {mode === "edit" ? "Update" : "Enroll"}
             </Button>
           </DialogFooter>
         </form>

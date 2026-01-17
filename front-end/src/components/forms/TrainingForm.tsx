@@ -57,37 +57,37 @@ export function TrainingForm({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {training ? "Editar Treinamento" : "Novo Treinamento"}
+            {training ? "Edit Training" : "New Training"}
           </DialogTitle>
           <DialogDescription>
             {training
-              ? "Atualize as informações do treinamento"
-              : "Preencha os dados para criar um novo treinamento"}
+              ? "Update the training information"
+              : "Fill in the details to create a new training"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Nome do Treinamento </Label>
+              <Label htmlFor="name">Training Name </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                placeholder="Ex: Python para Iniciantes"
+                placeholder="E.g.: Python for Beginners"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Descrição </Label>
+              <Label htmlFor="description">Description </Label>
               <textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Descrição completa do treinamento..."
+                placeholder="Complete training description..."
                 required
                 className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
@@ -100,7 +100,7 @@ export function TrainingForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -108,7 +108,7 @@ export function TrainingForm({
               className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {training ? "Atualizar" : "Criar"}
+              {training ? "Update" : "Create"}
             </Button>
           </DialogFooter>
         </form>

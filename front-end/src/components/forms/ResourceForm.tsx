@@ -85,18 +85,18 @@ export function ResourceForm({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {resource ? "Editar Recurso" : "Novo Recurso"}
+            {resource ? "Edit Resource" : "New Resource"}
           </DialogTitle>
           <DialogDescription>
             {resource
-              ? "Atualize as informações do recurso"
-              : "Preencha os dados para criar um novo recurso"}
+              ? "Update the resource information"
+              : "Fill in the details to create a new resource"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="class_group">Turma </Label>
+              <Label htmlFor="class_group">Class </Label>
               <Select
                 value={formData.class_group.toString()}
                 onValueChange={(value) =>
@@ -108,7 +108,7 @@ export function ResourceForm({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma turma" />
+                  <SelectValue placeholder="Select a class" />
                 </SelectTrigger>
                 <SelectContent>
                   {classGroups.map((classGroup) => (
@@ -123,19 +123,19 @@ export function ResourceForm({
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_name">Nome do Recurso </Label>
+              <Label htmlFor="resource_name">Resource Name </Label>
               <Input
                 id="resource_name"
                 value={formData.resource_name}
                 onChange={(e) =>
                   setFormData({ ...formData, resource_name: e.target.value })
                 }
-                placeholder="Ex: Aula 1 - Introdução"
+                placeholder="E.g.: Lesson 1 - Introduction"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_description">Descrição</Label>
+              <Label htmlFor="resource_description">Description</Label>
               <textarea
                 id="resource_description"
                 value={formData.resource_description}
@@ -145,13 +145,13 @@ export function ResourceForm({
                     resource_description: e.target.value,
                   })
                 }
-                placeholder="Descrição do recurso..."
+                placeholder="Resource description..."
                 required
                 className="min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_type">Tipo de Recurso </Label>
+              <Label htmlFor="resource_type">Resource Type </Label>
               <Select
                 value={formData.resource_type}
                 onValueChange={(value) =>
@@ -163,12 +163,12 @@ export function ResourceForm({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo" />
+                  <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="video">Vídeo</SelectItem>
+                  <SelectItem value="video">Video</SelectItem>
                   <SelectItem value="pdf">PDF</SelectItem>
-                  <SelectItem value="zip">ZIP (Arquivos)</SelectItem>
+                  <SelectItem value="zip">ZIP (Files)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -177,9 +177,9 @@ export function ResourceForm({
                 htmlFor="prior_access"
                 className="flex flex-col items-start space-y-1"
               >
-                <span>Acesso Prévio</span>
+                <span>Prior Access</span>
                 <span className="font-normal text-sm text-muted-foreground">
-                  Permitir acesso antes do início da turma
+                  Allow access before class starts
                 </span>
               </Label>
               <Switch
@@ -195,9 +195,9 @@ export function ResourceForm({
                 htmlFor="draft"
                 className="flex flex-col space-y-1 items-start"
               >
-                <span>Rascunho</span>
+                <span>Draft</span>
                 <span className="font-normal text-sm text-muted-foreground">
-                  Manter como rascunho
+                  Keep as draft
                 </span>
               </Label>
               <Switch
@@ -216,7 +216,7 @@ export function ResourceForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -224,7 +224,7 @@ export function ResourceForm({
               className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {resource ? "Atualizar" : "Criar"}
+              {resource ? "Update" : "Create"}
             </Button>
           </DialogFooter>
         </form>

@@ -31,37 +31,37 @@ const adminNavItems: NavItem[] = [
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    description: "Visão geral",
+    description: "Overview",
   },
   {
-    title: "Treinamentos",
+    title: "Trainings",
     href: "/dashboard/trainings",
     icon: GraduationCap,
-    description: "Gerenciar treinamentos",
+    description: "Manage trainings",
   },
   {
-    title: "Turmas",
+    title: "Classes",
     href: "/dashboard/class",
     icon: BookOpen,
-    description: "Gerenciar Turmas",
+    description: "Manage classes",
   },
   {
-    title: "Recursos",
+    title: "Resources",
     href: "/dashboard/resources",
     icon: Library,
-    description: "Materiais e recursos",
+    description: "Materials and resources",
   },
   {
-    title: "Alunos",
+    title: "Students",
     href: "/dashboard/students",
     icon: Users,
-    description: "Gerenciar alunos",
+    description: "Manage students",
   },
   {
-    title: "Matrículas",
+    title: "Enrollments",
     href: "/dashboard/enrollments",
     icon: ClipboardList,
-    description: "Gerenciar matrículas",
+    description: "Manage enrollments",
   },
 ];
 
@@ -70,19 +70,19 @@ const studentNavItems: NavItem[] = [
     title: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    description: "Página inicial",
+    description: "Home page",
   },
   {
-    title: "Minha Matrícula",
+    title: "My Enrollment",
     href: "/dashboard/my-enrollment",
     icon: ClipboardList,
-    description: "Detalhes da matrícula",
+    description: "Enrollment details",
   },
   {
-    title: "Minha Turma",
+    title: "My Class",
     href: "/dashboard/my-class",
     icon: Users,
-    description: "Informações da turma",
+    description: "Class information",
   },
 ];
 
@@ -112,7 +112,7 @@ export function DashboardSidebar({ role }: SidebarProps) {
         <div className="p-4">
           <div className="mb-4">
             <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold">
-              {role === "admin" ? "Administrador" : "Aluno"}
+              {role === "admin" ? "Administrator" : "Student"}
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function DashboardSidebar({ role }: SidebarProps) {
             disabled={logoutMutation.isPending}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            <span>{logoutMutation.isPending ? "Saindo..." : "Sair"}</span>
+            <span>{logoutMutation.isPending ? "Signing out..." : "Sign Out"}</span>
           </Button>
         </nav>
       </div>

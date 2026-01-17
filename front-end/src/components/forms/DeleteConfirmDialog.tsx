@@ -52,7 +52,7 @@ export function DeleteConfirmDialog({
 						onClick={() => onOpenChange(false)}
 						disabled={isLoading}
 					>
-						Cancelar
+						Cancel
 					</Button>
 					<Button
 						type="button"
@@ -61,7 +61,7 @@ export function DeleteConfirmDialog({
 						disabled={isLoading}
 					>
 						{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-						Excluir
+						Delete
 					</Button>
 				</DialogFooter>
 			</DialogContent>

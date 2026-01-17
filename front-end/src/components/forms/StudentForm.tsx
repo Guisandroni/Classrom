@@ -71,23 +71,23 @@ export function StudentForm({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === "edit" ? "Editar Aluno" : "Novo Aluno"}
+            {mode === "edit" ? "Edit Student" : "New Student"}
           </DialogTitle>
           <DialogDescription>
             {mode === "edit"
-              ? "Atualize as informações do aluno"
-              : "Adicione um novo aluno a plataforma"}
+              ? "Update the student information"
+              : "Add a new student to the platform"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Nome </Label>
+              <Label htmlFor="name">Name </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                placeholder="Nome completo"
+                placeholder="Full name"
                 required
               />
             </div>
@@ -97,7 +97,7 @@ export function StudentForm({
                 id="username"
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
-                placeholder="Nome de usuário"
+                placeholder="Username"
                 required
               />
             </div>
@@ -108,17 +108,17 @@ export function StudentForm({
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                placeholder="email@exemplo.com"
+                placeholder="email@example.com"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone">Phone</Label>
               <Input
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                placeholder="(11) 99999-9999"
+                placeholder="+1 555-555-5555"
               />
             </div>
           </div>
@@ -129,7 +129,7 @@ export function StudentForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -137,7 +137,7 @@ export function StudentForm({
               className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {mode === "edit" ? "Atualizar" : "Criar"}
+              {mode === "edit" ? "Update" : "Create"}
             </Button>
           </DialogFooter>
         </form>

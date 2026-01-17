@@ -80,22 +80,22 @@ export function ClassGroupForm({
 
     if (!formData.training || formData.training === 0) {
       console.log("Validation error: training is not selected");
-      setError("Por favor, selecione um treinamento");
+      setError("Please select a training");
       return;
     }
 
     if (!formData.name.trim()) {
-      setError("Por favor, preencha o nome da turma");
+      setError("Please enter the class name");
       return;
     }
 
     if (!formData.start_date || !formData.end_date) {
-      setError("Por favor, preencha as datas de início e término");
+      setError("Please fill in the start and end dates");
       return;
     }
 
     if (new Date(formData.start_date) >= new Date(formData.end_date)) {
-      setError("A data de término deve ser posterior à data de início");
+      setError("The end date must be after the start date");
       return;
     }
 
@@ -107,12 +107,12 @@ export function ClassGroupForm({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {classGroup ? "Editar Turma" : "Nova Turma"}
+            {classGroup ? "Edit Class" : "New Class"}
           </DialogTitle>
           <DialogDescription>
             {classGroup
-              ? "Atualize as informações da turma"
-              : "Preencha os dados para criar uma nova turma"}
+              ? "Update the class information"
+              : "Fill in the details to create a new class"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -123,7 +123,7 @@ export function ClassGroupForm({
           )}
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="training">Treinamento </Label>
+              <Label htmlFor="training">Training </Label>
               <Select
                 value={
                   formData.training && formData.training > 0
@@ -140,7 +140,7 @@ export function ClassGroupForm({
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um treinamento" />
+                  <SelectValue placeholder="Select a training" />
                 </SelectTrigger>
                 <SelectContent>
                   {trainings.map((training) => (
@@ -155,20 +155,20 @@ export function ClassGroupForm({
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="name">Nome da Turma </Label>
+              <Label htmlFor="name">Class Name </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                placeholder="Ex: Turma Python 2024-1"
+                placeholder="E.g.: Python Class 2024-1"
                 required
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="start_date">Data de Início </Label>
+                <Label htmlFor="start_date">Start Date </Label>
                 <Input
                   id="start_date"
                   type="date"
@@ -180,7 +180,7 @@ export function ClassGroupForm({
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="end_date">Data de Término </Label>
+                <Label htmlFor="end_date">End Date </Label>
                 <Input
                   id="end_date"
                   type="date"
@@ -193,7 +193,7 @@ export function ClassGroupForm({
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="access_link">Link de Acesso</Label>
+              <Label htmlFor="access_link">Access Link</Label>
               <Input
                 id="access_link"
                 type="url"
@@ -212,7 +212,7 @@ export function ClassGroupForm({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -220,7 +220,7 @@ export function ClassGroupForm({
               className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {classGroup ? "Atualizar" : "Criar"}
+              {classGroup ? "Update" : "Create"}
             </Button>
           </DialogFooter>
         </form>
