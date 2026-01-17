@@ -1,0 +1,354 @@
+# Classroom Management API - HTTP Requests
+
+Base URL: `http://localhost:8080/api`
+
+## Autenticação
+
+### Registrar Admin
+```http
+POST /api/auth/admin/register
+Content-Type: application/json
+
+{
+  "name": "Novo Admin",
+  "email": "novo.admin@classroom.com",
+  "phoneNumber": "11999998888",
+  "password": "senhaSegura123"
+}
+```
+
+### Login Admin
+```http
+POST /api/auth/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@classroom.com",
+  "password": "password123"
+}
+```
+
+### Registrar Student (Cria User + Student)
+```http
+POST /api/auth/student/register
+Content-Type: application/json
+
+{
+  "name": "Novo Estudante",
+  "email": "novo.estudante@email.com",
+  "phoneNumber": "11977776666",
+  "password": "senhaSegura123"
+}
+```
+
+### Login Student
+```http
+POST /api/auth/student/login
+Content-Type: application/json
+
+{
+  "email": "joao.silva@email.com",
+  "password": "password123"
+}
+```
+
+---
+
+## Trainings (Requer Autenticação)
+
+### Listar Todos
+```http
+GET /api/trainings
+Authorization: Bearer {{token}}
+```
+
+### Buscar por ID
+```http
+GET /api/trainings/1
+Authorization: Bearer {{token}}
+```
+
+### Meus Trainings
+```http
+GET /api/trainings/my
+Authorization: Bearer {{token}}
+```
+
+### Criar Training (Admin)
+```http
+POST /api/trainings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Python para Data Science",
+  "description": "Curso completo de Python focado em análise de dados"
+}
+```
+
+### Atualizar Training (Admin)
+```http
+PUT /api/trainings/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Desenvolvimento Web Full Stack 2026",
+  "description": "Curso atualizado com tecnologias modernas"
+}
+```
+
+### Deletar Training (Admin)
+```http
+DELETE /api/trainings/1
+Authorization: Bearer {{token}}
+```
+
+---
+
+## Classes (Requer Autenticação)
+
+### Listar Todas
+```http
+GET /api/classes
+Authorization: Bearer {{token}}
+```
+
+### Buscar por ID
+```http
+GET /api/classes/1
+Authorization: Bearer {{token}}
+```
+
+### Buscar por Training
+```http
+GET /api/classes/training/1
+Authorization: Bearer {{token}}
+```
+
+### Criar Class
+```http
+POST /api/classes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "trainingId": 1,
+  "name": "React Hooks Avançado",
+  "startDate": "2026-04-01T09:00:00",
+  "endDate": "2026-04-01T12:00:00",
+  "accessLink": "https://meet.classroom.com/react-hooks-adv"
+}
+```
+
+### Atualizar Class
+```http
+PUT /api/classes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "trainingId": 1,
+  "name": "Introdução ao HTML - Atualizado",
+  "startDate": "2026-02-01T10:00:00",
+  "endDate": "2026-02-01T13:00:00",
+  "accessLink": "https://meet.classroom.com/html-v2"
+}
+```
+
+### Deletar Class
+```http
+DELETE /api/classes/1
+Authorization: Bearer {{token}}
+```
+
+---
+
+## Resources (Requer Autenticação)
+
+### Listar Todos
+```http
+GET /api/resources
+Authorization: Bearer {{token}}
+```
+
+### Buscar por ID
+```http
+GET /api/resources/1
+Authorization: Bearer {{token}}
+```
+
+### Buscar por Class
+```http
+GET /api/resources/class/1
+Authorization: Bearer {{token}}
+```
+
+### Criar Resource
+```http
+POST /api/resources
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "classId": 1,
+  "resourceType": "PDF",
+  "previousAccess": true,
+  "draft": false,
+  "name": "Guia Completo CSS Grid",
+  "description": "Material sobre CSS Grid Layout"
+}
+```
+
+### Atualizar Resource
+```http
+PUT /api/resources/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "classId": 1,
+  "resourceType": "PDF",
+  "previousAccess": true,
+  "draft": false,
+  "name": "Apostila HTML - Revisada",
+  "description": "Material atualizado"
+}
+```
+
+### Deletar Resource
+```http
+DELETE /api/resources/1
+Authorization: Bearer {{token}}
+```
+
+---
+
+## Students (Requer Autenticação)
+
+### Listar Todos
+```http
+GET /api/students
+Authorization: Bearer {{token}}
+```
+
+### Buscar por ID
+```http
+GET /api/students/1
+Authorization: Bearer {{token}}
+```
+
+### Meu Perfil
+```http
+GET /api/students/me
+Authorization: Bearer {{token}}
+```
+
+### Criar Student
+```http
+POST /api/students
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Lucas Ferreira",
+  "email": "lucas.ferreira@email.com",
+  "phoneNumber": "11977775555"
+}
+```
+
+### Atualizar Student
+```http
+PUT /api/students/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "João Silva Santos",
+  "email": "joao.silva@email.com",
+  "phoneNumber": "11988881001"
+}
+```
+
+### Deletar Student
+```http
+DELETE /api/students/1
+Authorization: Bearer {{token}}
+```
+
+---
+
+## Enrollments (Requer Autenticação)
+
+### Listar Todas
+```http
+GET /api/enrollments
+Authorization: Bearer {{token}}
+```
+
+### Buscar por ID
+```http
+GET /api/enrollments/1
+Authorization: Bearer {{token}}
+```
+
+### Buscar por Class
+```http
+GET /api/enrollments/class/1
+Authorization: Bearer {{token}}
+```
+
+### Buscar por Student
+```http
+GET /api/enrollments/student/1
+Authorization: Bearer {{token}}
+```
+
+### Minhas Matrículas
+```http
+GET /api/enrollments/my
+Authorization: Bearer {{token}}
+```
+
+### Criar Enrollment
+```http
+POST /api/enrollments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "classId": 7,
+  "studentId": 1
+}
+```
+
+### Deletar Enrollment
+```http
+DELETE /api/enrollments/1
+Authorization: Bearer {{token}}
+```
+
+---
+
+## Exemplos cURL
+
+### Login e obter token
+```bash
+curl -X POST http://localhost:8080/api/auth/student/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"joao.silva@email.com","password":"password123"}'
+```
+
+### Listar trainings com token
+```bash
+curl -X GET http://localhost:8080/api/trainings \
+  -H 'Authorization: Bearer YOUR_TOKEN_HERE'
+```
+
+### Criar enrollment
+```bash
+curl -X POST http://localhost:8080/api/enrollments \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_TOKEN_HERE' \
+  -d '{"classId":1,"studentId":1}'
+```
