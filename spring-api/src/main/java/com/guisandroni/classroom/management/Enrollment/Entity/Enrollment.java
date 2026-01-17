@@ -1,5 +1,6 @@
 package com.guisandroni.classroom.management.Enrollment.Entity;
 
+import com.guisandroni.classroom.management.Auth.Entity.User;
 import com.guisandroni.classroom.management.Class.Entity.Class;
 import com.guisandroni.classroom.management.Student.Entity.Student;
 import jakarta.persistence.*;
