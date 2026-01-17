@@ -26,12 +26,17 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
 	message: string;
-	user: User;
+	user: {
+		id: number;
+		username: string;
+		email: string;
+		role: "admin" | "student";
+	};
 	tokens: Tokens;
 }
 
 export interface LoginRequest {
-	username: string;
+	email: string;
 	password: string;
 }
 
@@ -41,6 +46,7 @@ export interface LoginResponse {
 	user: {
 		id: number;
 		username: string;
+		email: string;
 		role: "admin" | "student";
 	};
 }
@@ -93,10 +99,10 @@ export interface ClassGroup {
 	training: number;
 	training_name: string;
 	name: string;
-	start_date: string; 
+	start_date: string;
 	end_date: string;
 	access_link: string;
-	resources?: Resource[]; 
+	resources?: Resource[];
 }
 
 export interface ClassGroupCreate {
