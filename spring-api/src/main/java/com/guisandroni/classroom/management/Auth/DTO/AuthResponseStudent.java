@@ -1,6 +1,5 @@
 package com.guisandroni.classroom.management.Auth.DTO;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponseAdmin {
+public class AuthResponseStudent {
     private String token;
     private String type;
     private Long id;
@@ -18,5 +17,4 @@ public class AuthResponseAdmin {
     private String email;
     private String phoneNumber;
     private String role;
-
 }

@@ -1,9 +1,9 @@
 package com.guisandroni.classroom.management.Auth.Controller;
 
-import com.guisandroni.classroom.management.Auth.DTO.AuthResponseStudent;
+import com.guisandroni.classroom.management.Auth.DTO.AuthResponseAdmin;
 import com.guisandroni.classroom.management.Auth.DTO.LoginRequest;
 import com.guisandroni.classroom.management.Auth.DTO.RegisterRequest;
-import com.guisandroni.classroom.management.Auth.Service.AuthServiceStudent;
+import com.guisandroni.classroom.management.Auth.Service.AuthServiceAdmin;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,22 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@RequestMapping("/api/auth/student")
+@RequestMapping("/api/auth/admin")
 @RequiredArgsConstructor
-public class AuthControllerStudent {
+public class AuthControllerAdmin {
 
+    private final AuthServiceAdmin authService;
 
-    private final AuthServiceStudent authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseStudent> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponseAdmin> register (@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
     }
-
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseStudent> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponseAdmin> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

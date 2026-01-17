@@ -1,11 +1,13 @@
 package com.guisandroni.classroom.management.Auth.Service;
 
-import com.guisandroni.classroom.management.Auth.DTO.AuthResponseAdmin;
+import com.guisandroni.classroom.management.Auth.DTO.AuthResponseStudent;
 import com.guisandroni.classroom.management.Auth.DTO.LoginRequest;
 import com.guisandroni.classroom.management.Auth.DTO.RegisterRequest;
 import com.guisandroni.classroom.management.Auth.Entity.User;
 import com.guisandroni.classroom.management.Auth.Enum.Role;
 import com.guisandroni.classroom.management.Auth.Repository.UserRepository;
+import com.guisandroni.classroom.management.Student.Entity.Student;
+import com.guisandroni.classroom.management.Student.Repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +16,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceAdmin {
+public class AuthServiceStudent {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final StudentRepository studentRepository;
 
-    public AuthResponseAdmin register(RegisterRequest request) {
+
+    public AuthResponseStudent register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email is already in use");
         }
@@ -31,13 +35,21 @@ public class AuthServiceAdmin {
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(Role.STUDENT)
                 .build();
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
 
-        return AuthResponseAdmin.builder()
+        Student student = new Student();
+        student.setName(request.getName());
+        student.setEmail(request.getEmail());
+        student.setPhoneNumber(request.getPhoneNumber());
+
+        studentRepository.save(student);
+
+
+        return AuthResponseStudent.builder()
                 .token(jwtToken)
                 .type("Bearer")
                 .id(user.getId())
@@ -48,7 +60,7 @@ public class AuthServiceAdmin {
                 .build();
     }
 
-    public AuthResponseAdmin login(LoginRequest request) {
+    public AuthResponseStudent login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -61,7 +73,7 @@ public class AuthServiceAdmin {
 
         var jwtToken = jwtService.generateToken(user);
 
-        return AuthResponseAdmin.builder()
+        return AuthResponseStudent.builder()
                 .token(jwtToken)
                 .type("Bearer")
                 .id(user.getId())
