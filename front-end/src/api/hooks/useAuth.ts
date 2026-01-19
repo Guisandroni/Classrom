@@ -12,10 +12,11 @@ import type {
 	LoginResponse,
 	RegisterRequest,
 	RegisterResponse,
-	UserMe,
+	StudentMe,
 } from "@/types";
 
-export const useLogin = (): UseMutationResult<
+// Hook para login de estudante
+export const useLoginStudent = (): UseMutationResult<
 	LoginResponse,
 	Error,
 	LoginRequest
@@ -24,7 +25,7 @@ export const useLogin = (): UseMutationResult<
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: authApi.login,
+		mutationFn: authApi.loginStudent,
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			router.navigate({ to: "/dashboard" });
@@ -32,7 +33,26 @@ export const useLogin = (): UseMutationResult<
 	});
 };
 
-export const useRegister = (): UseMutationResult<
+// Hook para login de admin
+export const useLoginAdmin = (): UseMutationResult<
+	LoginResponse,
+	Error,
+	LoginRequest
+> => {
+	const router = useRouter();
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: authApi.loginAdmin,
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			router.navigate({ to: "/dashboard" });
+		},
+	});
+};
+
+// Hook para registro de estudante
+export const useRegisterStudent = (): UseMutationResult<
 	RegisterResponse,
 	Error,
 	RegisterRequest
@@ -41,7 +61,7 @@ export const useRegister = (): UseMutationResult<
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: authApi.register,
+		mutationFn: authApi.registerStudent,
 		onSuccess: () => {
 			queryClient.invalidateQueries();
 			router.navigate({ to: "/dashboard" });
@@ -49,6 +69,25 @@ export const useRegister = (): UseMutationResult<
 	});
 };
 
+// Hook para registro de admin
+export const useRegisterAdmin = (): UseMutationResult<
+	RegisterResponse,
+	Error,
+	RegisterRequest
+> => {
+	const router = useRouter();
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: authApi.registerAdmin,
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			router.navigate({ to: "/dashboard" });
+		},
+	});
+};
+
+// Hook para logout
 export const useLogout = (): UseMutationResult<void, Error, void> => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
@@ -62,11 +101,18 @@ export const useLogout = (): UseMutationResult<void, Error, void> => {
 	});
 };
 
-export const useMe = (enabled = true): UseQueryResult<UserMe, Error> => {
+// Hook para buscar dados do estudante autenticado
+export const useMe = (enabled = true): UseQueryResult<StudentMe, Error> => {
 	return useQuery({
-		queryKey: ["me"],
-		queryFn: authApi.me,
-		enabled: enabled && authApi.isAuthenticated(),
+		queryKey: ["student-me"],
+		queryFn: authApi.getStudentMe,
+		enabled: enabled && authApi.isAuthenticated() && authApi.isStudent(),
 		retry: false,
 	});
 };
+
+// Alias para compatibilidade - usa loginStudent como padrão
+export const useLogin = useLoginStudent;
+
+// Alias para compatibilidade - usa registerStudent como padrão
+export const useRegister = useRegisterStudent;
