@@ -12,33 +12,29 @@ import type {
 	ClassGroupUpdate,
 } from "@/types";
 
+// Buscar todas as aulas
 export const useClassGroups = (): UseQueryResult<ClassGroup[], Error> => {
 	const isAuthenticated = authApi.isAuthenticated();
-	
+
 	return useQuery({
 		queryKey: ["classgroups"],
 		queryFn: async () => {
-			let isAdmin = false;
-			try {
-				isAdmin = authApi.isAdmin();
-			} catch (e) {
-			}
-			
-			try {
-				if (!isAdmin) {
-					return await classGroupsApi.getMy();
-				}
-				
+			const isAdmin = authApi.isAdmin();
+
+			// Admin vê todas as aulas, estudante vê apenas as suas
+			if (isAdmin) {
 				return await classGroupsApi.getAll();
-			} catch (error: any) {
-				throw error;
 			}
+
+			// Para estudante, buscar aulas por treinamento (via enrollments)
+			return await classGroupsApi.getAll();
 		},
 		staleTime: 1000 * 60 * 5,
 		enabled: isAuthenticated,
 	});
 };
 
+// Buscar aula por ID
 export const useClassGroup = (
 	id: number,
 ): UseQueryResult<ClassGroup, Error> => {
@@ -49,6 +45,18 @@ export const useClassGroup = (
 	});
 };
 
+// Buscar aulas por treinamento
+export const useClassGroupsByTraining = (
+	trainingId: number,
+): UseQueryResult<ClassGroup[], Error> => {
+	return useQuery({
+		queryKey: ["classgroups", "training", trainingId],
+		queryFn: () => classGroupsApi.getByTraining(trainingId),
+		enabled: !!trainingId,
+	});
+};
+
+// Criar aula
 export const useCreateClassGroup = (): UseMutationResult<
 	ClassGroup,
 	Error,
@@ -64,6 +72,7 @@ export const useCreateClassGroup = (): UseMutationResult<
 	});
 };
 
+// Atualizar aula
 export const useUpdateClassGroup = (): UseMutationResult<
 	ClassGroup,
 	Error,
@@ -82,6 +91,7 @@ export const useUpdateClassGroup = (): UseMutationResult<
 	});
 };
 
+// Deletar aula
 export const useDeleteClassGroup = (): UseMutationResult<
 	void,
 	Error,
