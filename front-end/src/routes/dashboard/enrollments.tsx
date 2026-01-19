@@ -21,7 +21,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Plus,
   Trash2,
-  Edit,
   Loader2,
   Search,
   UserCheck,
@@ -33,7 +32,6 @@ import {
   useClassGroups,
   useStudents,
   useCreateEnrollment,
-  useUpdateEnrollment,
   useDeleteEnrollment,
 } from "@/api/hooks";
 import { EnrollmentForm, DeleteConfirmDialog } from "@/components/forms";
@@ -55,7 +53,6 @@ function EnrollmentsPage() {
   const { data: students, isLoading: studentsLoading } = useStudents();
 
   const createMutation = useCreateEnrollment();
-  const updateMutation = useUpdateEnrollment();
   const deleteMutation = useDeleteEnrollment();
 
   const isLoading = enrollmentsLoading || classGroupsLoading || studentsLoading;
@@ -65,34 +62,17 @@ function EnrollmentsPage() {
     setFormOpen(true);
   };
 
-  const handleEdit = (enrollment: Enrollment) => {
-    setSelectedEnrollment(enrollment);
-    setFormOpen(true);
-  };
-
   const handleDelete = (enrollment: Enrollment) => {
     setSelectedEnrollment(enrollment);
     setDeleteOpen(true);
   };
 
   const handleFormSubmit = (data: any) => {
-    if (selectedEnrollment) {
-      updateMutation.mutate(
-        { id: selectedEnrollment.id, data },
-        {
-          onSuccess: () => {
-            setFormOpen(false);
-            setSelectedEnrollment(null);
-          },
-        },
-      );
-    } else {
-      createMutation.mutate(data, {
-        onSuccess: () => {
-          setFormOpen(false);
-        },
-      });
-    }
+    createMutation.mutate(data, {
+      onSuccess: () => {
+        setFormOpen(false);
+      },
+    });
   };
 
   const handleDeleteConfirm = () => {
@@ -109,17 +89,13 @@ function EnrollmentsPage() {
   const filteredEnrollments =
     enrollments?.filter(
       (enrollment) =>
-        enrollment.student_name
+        (enrollment.studentName || "")
           .toLowerCase()
           .includes(searchQuery.toLowerCase()) ||
-        enrollment.class_group_name
+        (enrollment.className || "")
           .toLowerCase()
           .includes(searchQuery.toLowerCase()),
     ) || [];
-
-  const totalEnrollments = enrollments?.length || 0;
-  const uniqueStudents = new Set(enrollments?.map((e) => e.student)).size;
-  const uniqueClasses = new Set(enrollments?.map((e) => e.class_group)).size;
 
   if (isLoading) {
     return (
@@ -201,10 +177,10 @@ function EnrollmentsPage() {
                         <Users className="h-4 w-4 text-blue-600" />
                         <div>
                           <div className="font-medium">
-                            {enrollment.student_name}
+                            {enrollment.studentName}
                           </div>
                           <div className="text-xs text-gray-500">
-                            Student ID: {enrollment.student}
+                            Student ID: {enrollment.studentId}
                           </div>
                         </div>
                       </div>
@@ -214,10 +190,10 @@ function EnrollmentsPage() {
                         <GraduationCap className="h-4 w-4 text-green-600" />
                         <div>
                           <div className="font-medium">
-                            {enrollment.class_group_name}
+                            {enrollment.className}
                           </div>
                           <div className="text-xs text-gray-500">
-                            Class ID: {enrollment.class_group}
+                            Class ID: {enrollment.classId}
                           </div>
                         </div>
                       </div>
@@ -225,24 +201,15 @@ function EnrollmentsPage() {
                     <TableCell>
                       <div className="flex gap-2">
                         <Badge variant="outline" className="text-xs">
-                          Student: {enrollment.student}
+                          Student: {enrollment.studentId}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
-                          Class: {enrollment.class_group}
+                          Class: {enrollment.classId}
                         </Badge>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleEdit(enrollment)}
-                          title="Edit enrollment"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -271,7 +238,7 @@ function EnrollmentsPage() {
         onSubmit={handleFormSubmit}
         initialData={selectedEnrollment}
         mode={selectedEnrollment ? "edit" : "create"}
-        isLoading={createMutation.isPending || updateMutation.isPending}
+        isLoading={createMutation.isPending}
       />
 
       <DeleteConfirmDialog
@@ -281,7 +248,7 @@ function EnrollmentsPage() {
         description="Are you sure you want to delete this enrollment? The student will lose access to this class resources."
         itemName={
           selectedEnrollment
-            ? `${selectedEnrollment.student_name} - ${selectedEnrollment.class_group_name}`
+            ? `${selectedEnrollment.studentName} - ${selectedEnrollment.className}`
             : undefined
         }
         onConfirm={handleDeleteConfirm}
