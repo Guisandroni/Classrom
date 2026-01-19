@@ -12,33 +12,14 @@ import type {
 	ResourceUpdate,
 } from "@/types";
 
+// Buscar todos os recursos
 export const useResources = (): UseQueryResult<Resource[], Error> => {
 	const isAuthenticated = authApi.isAuthenticated();
-	
-	let isAdmin = false;
-	try {
-		isAdmin = authApi.isAdmin();
-	} catch (e) {
-	}
-	
+
 	return useQuery({
 		queryKey: ["resources"],
 		queryFn: async () => {
-			let isAdminCheck = false;
-			try {
-				isAdminCheck = authApi.isAdmin();
-			} catch (e) {
-			}
-		
-			try {
-				if (!isAdminCheck) {
-					return await resourcesApi.getMy();
-				}
-				
-				return await resourcesApi.getAll();
-			} catch (error: any) {
-				throw error;
-			}
+			return await resourcesApi.getAll();
 		},
 		staleTime: 1000 * 60 * 5,
 		enabled: isAuthenticated,
@@ -46,6 +27,7 @@ export const useResources = (): UseQueryResult<Resource[], Error> => {
 	});
 };
 
+// Buscar recurso por ID
 export const useResource = (id: number): UseQueryResult<Resource, Error> => {
 	return useQuery({
 		queryKey: ["resources", id],
@@ -54,16 +36,18 @@ export const useResource = (id: number): UseQueryResult<Resource, Error> => {
 	});
 };
 
-export const useResourcesByType = (
-	type: string,
+// Buscar recursos por aula
+export const useResourcesByClass = (
+	classId: number,
 ): UseQueryResult<Resource[], Error> => {
 	return useQuery({
-		queryKey: ["resources", "type", type],
-		queryFn: () => resourcesApi.getByType(type),
-		enabled: !!type,
+		queryKey: ["resources", "class", classId],
+		queryFn: () => resourcesApi.getByClass(classId),
+		enabled: !!classId,
 	});
 };
 
+// Criar recurso
 export const useCreateResource = (): UseMutationResult<
 	Resource,
 	Error,
@@ -79,6 +63,7 @@ export const useCreateResource = (): UseMutationResult<
 	});
 };
 
+// Atualizar recurso
 export const useUpdateResource = (): UseMutationResult<
 	Resource,
 	Error,
@@ -95,6 +80,7 @@ export const useUpdateResource = (): UseMutationResult<
 	});
 };
 
+// Deletar recurso
 export const useDeleteResource = (): UseMutationResult<void, Error, number> => {
 	const queryClient = useQueryClient();
 
