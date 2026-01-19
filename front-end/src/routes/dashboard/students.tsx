@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -116,8 +115,7 @@ function StudentsPage() {
     students?.filter((student) => {
       const matchesSearch =
         student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.username.toLowerCase().includes(searchQuery.toLowerCase());
+        student.email.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesSearch;
     }) || [];
 
@@ -202,7 +200,6 @@ function StudentsPage() {
                 <TableRow>
                   <TableHead>ID</TableHead>
                   <TableHead>Student</TableHead>
-                  <TableHead>Username</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -232,20 +229,15 @@ function StudentsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <code className="text-sm bg-gray-100 px-2 py-1 rounded">
-                        @{student.username}
-                      </code>
-                    </TableCell>
-                    <TableCell>
                       <div className="space-y-1">
                         <div className="flex items-center gap-1 text-sm">
                           <Mail className="h-3 w-3 text-gray-400" />
                           <span>{student.email}</span>
                         </div>
-                        {student.phone && (
+                        {student.phoneNumber && (
                           <div className="flex items-center gap-1 text-sm text-gray-500">
                             <Phone className="h-3 w-3 text-gray-400" />
-                            <span>{student.phone}</span>
+                            <span>{student.phoneNumber}</span>
                           </div>
                         )}
                       </div>
