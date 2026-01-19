@@ -12,9 +12,10 @@ import type {
 	TrainingUpdate,
 } from "@/types";
 
+// Buscar todos os treinamentos (apenas ADMIN)
 export const useTrainings = (): UseQueryResult<Training[], Error> => {
 	const currentUser = authApi.getCurrentUser();
-	const isAdmin = currentUser?.role === "admin";
+	const isAdmin = currentUser?.role === "ADMIN";
 
 	return useQuery({
 		queryKey: ["trainings"],
@@ -26,6 +27,19 @@ export const useTrainings = (): UseQueryResult<Training[], Error> => {
 	});
 };
 
+// Buscar treinamentos do usuário autenticado
+export const useMyTrainings = (): UseQueryResult<Training[], Error> => {
+	return useQuery({
+		queryKey: ["trainings", "my"],
+		queryFn: async () => {
+			return trainingsApi.getMy();
+		},
+		staleTime: 1000 * 60 * 5,
+		enabled: authApi.isAuthenticated(),
+	});
+};
+
+// Buscar treinamento por ID
 export const useTraining = (id: number): UseQueryResult<Training, Error> => {
 	return useQuery({
 		queryKey: ["trainings", id],
@@ -34,6 +48,7 @@ export const useTraining = (id: number): UseQueryResult<Training, Error> => {
 	});
 };
 
+// Criar treinamento
 export const useCreateTraining = (): UseMutationResult<
 	Training,
 	Error,
@@ -49,6 +64,7 @@ export const useCreateTraining = (): UseMutationResult<
 	});
 };
 
+// Atualizar treinamento
 export const useUpdateTraining = (): UseMutationResult<
 	Training,
 	Error,
@@ -65,6 +81,7 @@ export const useUpdateTraining = (): UseMutationResult<
 	});
 };
 
+// Deletar treinamento
 export const useDeleteTraining = (): UseMutationResult<void, Error, number> => {
 	const queryClient = useQueryClient();
 
