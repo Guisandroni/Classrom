@@ -87,7 +87,7 @@ function ResourcesPage() {
   };
 
   const handleVideoClick = (resource: Resource) => {
-    if (resource.resource_type === "video") {
+    if (resource.resourceType === "VIDEO") {
       setSelectedVideoResource(resource);
       setVideoOpen(true);
     }
@@ -126,44 +126,31 @@ function ResourcesPage() {
 
   const filteredResources =
     resources?.filter((resource) => {
-      const matchesSearch = resource.resource_name
+      const matchesSearch = resource.name
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
       const matchesType =
-        filterType === "all" || resource.resource_type === filterType;
+        filterType === "all" || resource.resourceType === filterType;
       return matchesSearch && matchesType;
     }) || [];
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "video":
-        return <Video className="h-4 w-4" />;
-      case "pdf":
-        return <FileText className="h-4 w-4" />;
-      case "zip":
-        return <File className="h-4 w-4" />;
-      default:
-        return <File className="h-4 w-4" />;
-    }
-  };
-
   const getTypeBadge = (type: string) => {
     switch (type) {
-      case "video":
+      case "VIDEO":
         return (
           <Badge className="bg-blue-100 text-blue-700">
             <Video className="h-3 w-3 mr-1" />
             Video
           </Badge>
         );
-      case "pdf":
+      case "PDF":
         return (
           <Badge className="bg-purple-100 text-purple-700">
             <FileText className="h-3 w-3 mr-1" />
             PDF
           </Badge>
         );
-      case "zip":
+      case "ZIP":
         return (
           <Badge className="bg-orange-100 text-orange-700">
             <File className="h-3 w-3 mr-1" />
@@ -227,9 +214,9 @@ function ResourcesPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="video">Video</SelectItem>
-                  <SelectItem value="pdf">PDF</SelectItem>
-                  <SelectItem value="zip">ZIP</SelectItem>
+                  <SelectItem value="VIDEO">Video</SelectItem>
+                  <SelectItem value="PDF">PDF</SelectItem>
+                  <SelectItem value="ZIP">ZIP</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -263,12 +250,12 @@ function ResourcesPage() {
                   <TableRow
                     key={resource.id}
                     className={
-                      resource.resource_type === "video"
+                      resource.resourceType === "VIDEO"
                         ? "cursor-pointer hover:bg-gray-50"
                         : ""
                     }
                     onClick={() =>
-                      resource.resource_type === "video" &&
+                      resource.resourceType === "VIDEO" &&
                       handleVideoClick(resource)
                     }
                   >
@@ -278,23 +265,23 @@ function ResourcesPage() {
                     <TableCell>
                       <div className="space-y-1">
                         <div className="font-medium flex items-center gap-2">
-                          {resource.resource_name}
-                          {resource.resource_type === "video" && (
+                          {resource.name}
+                          {resource.resourceType === "VIDEO" && (
                             <Badge variant="outline" className="text-xs">
                               Click to watch
                             </Badge>
                           )}
                         </div>
                         <div className="text-sm text-gray-500 max-w-md truncate">
-                          {resource.resource_description}
+                          {resource.description}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm">{resource.class_group_name}</div>
+                      <div className="text-sm">{resource.className}</div>
                     </TableCell>
                     <TableCell>
-                      {getTypeBadge(resource.resource_type)}
+                      {getTypeBadge(resource.resourceType)}
                     </TableCell>
                     <TableCell>
                       {resource.draft ? (
@@ -358,7 +345,7 @@ function ResourcesPage() {
         onOpenChange={setDeleteOpen}
         title="Delete Resource"
         description="Are you sure you want to delete this resource? This action cannot be undone."
-        itemName={selectedResource?.resource_name}
+        itemName={selectedResource?.name}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}
       />
