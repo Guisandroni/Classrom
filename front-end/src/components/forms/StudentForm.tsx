@@ -11,12 +11,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import type { Student } from "@/types";
+import type { Student, StudentCreate, StudentUpdate } from "@/types";
 
 interface StudentFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: StudentCreate | StudentUpdate) => void;
   isLoading?: boolean;
   initialData?: Student | null;
   mode?: "create" | "edit";
@@ -30,11 +30,10 @@ export function StudentForm({
   initialData,
   mode = "create",
 }: StudentFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<StudentCreate>({
     name: "",
     email: "",
-    username: "",
-    phone: "",
+    phoneNumber: "",
   });
 
   useEffect(() => {
@@ -43,15 +42,13 @@ export function StudentForm({
         setFormData({
           name: initialData.name,
           email: initialData.email,
-          username: initialData.username,
-          phone: initialData.phone || "",
+          phoneNumber: initialData.phoneNumber || "",
         });
       } else {
         setFormData({
           name: "",
           email: "",
-          username: "",
-          phone: "",
+          phoneNumber: "",
         });
       }
     }
@@ -92,16 +89,6 @@ export function StudentForm({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="username">Username </Label>
-              <Input
-                id="username"
-                value={formData.username}
-                onChange={(e) => handleInputChange("username", e.target.value)}
-                placeholder="Username"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
               <Label htmlFor="email">Email </Label>
               <Input
                 id="email"
@@ -113,11 +100,11 @@ export function StudentForm({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phoneNumber">Phone</Label>
               <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
+                id="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
                 placeholder="+1 555-555-5555"
               />
             </div>
