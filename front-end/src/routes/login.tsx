@@ -11,30 +11,42 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useLogin } from "@/api/hooks";
+import { useLoginStudent, useLoginAdmin } from "@/api/hooks";
 import { ErrorAlert } from "@/components/ErrorAlert";
+import { GraduationCap, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+type UserRole = "student" | "admin";
+
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("student");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const loginMutation = useLogin();
+  const loginStudentMutation = useLoginStudent();
+  const loginAdminMutation = useLoginAdmin();
+
+  const isLoading = loginStudentMutation.isPending || loginAdminMutation.isPending;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
 
     try {
-      await loginMutation.mutateAsync({ email, password });
+      if (role === "admin") {
+        await loginAdminMutation.mutateAsync({ email, password });
+      } else {
+        await loginStudentMutation.mutateAsync({ email, password });
+      }
     } catch (error: any) {
       const message =
         error?.response?.data?.detail ||
         error?.response?.data?.message ||
+        error?.response?.data?.error ||
         "Invalid email or password";
       setErrorMessage(message);
     }
@@ -60,6 +72,41 @@ function LoginPage() {
                 />
               )}
 
+              {/* Role Selection */}
+              <div className="space-y-2">
+                <Label>Account Type</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant={role === "student" ? "default" : "outline"}
+                    className={`h-16 flex flex-col items-center justify-center gap-1 ${
+                      role === "student"
+                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                        : "hover:bg-blue-50"
+                    }`}
+                    onClick={() => setRole("student")}
+                    disabled={isLoading}
+                  >
+                    <GraduationCap className="h-5 w-5" />
+                    <span className="text-sm font-medium">Student</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={role === "admin" ? "default" : "outline"}
+                    className={`h-16 flex flex-col items-center justify-center gap-1 ${
+                      role === "admin"
+                        ? "bg-purple-600 hover:bg-purple-700 text-white"
+                        : "hover:bg-purple-50"
+                    }`}
+                    onClick={() => setRole("admin")}
+                    disabled={isLoading}
+                  >
+                    <Shield className="h-5 w-5" />
+                    <span className="text-sm font-medium">Admin</span>
+                  </Button>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -70,7 +117,7 @@ function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="h-11"
-                  disabled={loginMutation.isPending}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -92,16 +139,22 @@ function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="h-11"
-                  disabled={loginMutation.isPending}
+                  disabled={isLoading}
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full h-11 bg-blue-600 hover:bg-blue-700"
-                disabled={loginMutation.isPending}
+                className={`w-full h-11 ${
+                  role === "admin"
+                    ? "bg-purple-600 hover:bg-purple-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+                disabled={isLoading}
               >
-                {loginMutation.isPending ? "Signing in..." : "Sign In"}
+                {isLoading
+                  ? "Signing in..."
+                  : `Sign In as ${role === "admin" ? "Admin" : "Student"}`}
               </Button>
             </form>
           </CardContent>
