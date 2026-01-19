@@ -1,15 +1,9 @@
-import { Bell, LogOut, Settings, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLogout } from "@/api/hooks/useAuth";
 
 interface NavbarProps {
   user?: {
@@ -21,8 +15,6 @@ interface NavbarProps {
 }
 
 export function Navbar({ user }: NavbarProps) {
-  const logoutMutation = useLogout();
-
   const getInitials = (name?: string) => {
     if (!name) return "U";
     return name
@@ -31,10 +23,6 @@ export function Navbar({ user }: NavbarProps) {
       .join("")
       .toUpperCase()
       .slice(0, 2);
-  };
-
-  const handleLogout = () => {
-    logoutMutation.mutate();
   };
 
   return (
