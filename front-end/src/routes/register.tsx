@@ -11,40 +11,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useRegister } from "@/api/hooks";
+import { useRegisterStudent, useRegisterAdmin } from "@/api/hooks";
 import { ErrorAlert } from "@/components/ErrorAlert";
+import { GraduationCap, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
+type UserRole = "student" | "admin";
+
 function RegisterPage() {
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
-    role: "student" as "student" | "admin",
-    student_name: "",
-    student_phone: "",
   });
+  const [role, setRole] = useState<UserRole>("student");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [errorMessage, setErrorMessage] = useState("");
 
-  const registerMutation = useRegister();
+  const registerStudentMutation = useRegisterStudent();
+  const registerAdminMutation = useRegisterAdmin();
+
+  const isLoading = registerStudentMutation.isPending || registerAdminMutation.isPending;
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
     }
 
     if (!formData.email.trim()) {
@@ -53,13 +51,8 @@ function RegisterPage() {
       newErrors.email = "Invalid email";
     }
 
-    if (formData.role === "student") {
-      if (!formData.student_name.trim()) {
-        newErrors.student_name = "Full name is required";
-      }
-      if (!formData.student_phone.trim()) {
-        newErrors.student_phone = "Phone is required";
-      }
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = "Phone is required";
     }
 
     if (!formData.password) {
@@ -85,22 +78,23 @@ function RegisterPage() {
     }
 
     try {
-      await registerMutation.mutateAsync({
-        username: formData.username,
+      const registerData = {
+        name: formData.name,
         email: formData.email,
+        phoneNumber: formData.phoneNumber,
         password: formData.password,
-        password_confirm: formData.confirmPassword,
-        role: formData.role,
-        student_name:
-          formData.role === "student" ? formData.student_name : undefined,
-        student_phone:
-          formData.role === "student" ? formData.student_phone : undefined,
-      });
+      };
+
+      if (role === "admin") {
+        await registerAdminMutation.mutateAsync(registerData);
+      } else {
+        await registerStudentMutation.mutateAsync(registerData);
+      }
     } catch (error: any) {
       const message =
         error?.response?.data?.detail ||
         error?.response?.data?.message ||
-        error?.response?.data?.username?.[0] ||
+        error?.response?.data?.error ||
         error?.response?.data?.email?.[0] ||
         "Error creating account. Please check your data and try again.";
       setErrorMessage(message);
@@ -138,16 +132,51 @@ function RegisterPage() {
                 />
               )}
 
+              {/* Role Selection */}
+              <div className="space-y-2">
+                <Label>Account Type</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant={role === "student" ? "default" : "outline"}
+                    className={`h-16 flex flex-col items-center justify-center gap-1 ${
+                      role === "student"
+                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                        : "hover:bg-blue-50"
+                    }`}
+                    onClick={() => setRole("student")}
+                    disabled={isLoading}
+                  >
+                    <GraduationCap className="h-5 w-5" />
+                    <span className="text-sm font-medium">Student</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={role === "admin" ? "default" : "outline"}
+                    className={`h-16 flex flex-col items-center justify-center gap-1 ${
+                      role === "admin"
+                        ? "bg-purple-600 hover:bg-purple-700 text-white"
+                        : "hover:bg-purple-50"
+                    }`}
+                    onClick={() => setRole("admin")}
+                    disabled={isLoading}
+                  >
+                    <Shield className="h-5 w-5" />
+                    <span className="text-sm font-medium">Admin</span>
+                  </Button>
+                </div>
+              </div>
+
               <div className="space-y-1.5">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Carlos"
+                  placeholder="Your full name"
                   value={formData.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                   className={`h-11 ${errors.name ? "border-red-500" : ""}`}
-                  disabled={registerMutation.isPending}
+                  disabled={isLoading}
                 />
                 {errors.name && (
                   <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
@@ -161,15 +190,33 @@ function RegisterPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="carlos@email.com"
+                  placeholder="example@email.com"
                   value={formData.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                   className={`h-11 ${errors.email ? "border-red-500" : ""}`}
-                  disabled={registerMutation.isPending}
+                  disabled={isLoading}
                 />
                 {errors.email && (
                   <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
                     {errors.email}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="phoneNumber">Phone</Label>
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="(11) 99999-9999"
+                  value={formData.phoneNumber}
+                  onChange={(e) => handleChange("phoneNumber", e.target.value)}
+                  className={`h-11 ${errors.phoneNumber ? "border-red-500" : ""}`}
+                  disabled={isLoading}
+                />
+                {errors.phoneNumber && (
+                  <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
+                    {errors.phoneNumber}
                   </p>
                 )}
               </div>
@@ -183,7 +230,7 @@ function RegisterPage() {
                   value={formData.password}
                   onChange={(e) => handleChange("password", e.target.value)}
                   className={`h-11 ${errors.password ? "border-red-500" : ""}`}
-                  disabled={registerMutation.isPending}
+                  disabled={isLoading}
                 />
                 {errors.password && (
                   <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
@@ -203,7 +250,7 @@ function RegisterPage() {
                     handleChange("confirmPassword", e.target.value)
                   }
                   className={`h-11 ${errors.confirmPassword ? "border-red-500" : ""}`}
-                  disabled={registerMutation.isPending}
+                  disabled={isLoading}
                 />
                 {errors.confirmPassword && (
                   <p className="text-xs text-red-500 mt-1 min-h-[1rem]">
@@ -214,12 +261,16 @@ function RegisterPage() {
 
               <Button
                 type="submit"
-                className="w-full h-11 bg-blue-600 hover:bg-blue-700"
-                disabled={registerMutation.isPending}
+                className={`w-full h-11 ${
+                  role === "admin"
+                    ? "bg-purple-600 hover:bg-purple-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+                disabled={isLoading}
               >
-                {registerMutation.isPending
+                {isLoading
                   ? "Creating account..."
-                  : "Create Account"}
+                  : `Create ${role === "admin" ? "Admin" : "Student"} Account`}
               </Button>
             </form>
           </CardContent>
