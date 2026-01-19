@@ -1,75 +1,95 @@
-## 4. Instruções para Executar
+# Classroom Management
+
+Sistema de gerenciamento de sala de aula com autenticação JWT, desenvolvido com Spring Boot e React.
+
+![Preview da Aplicação](docs/2026-01-18_23-34.png)
+
+## Tecnologias
+
+### Backend
+- **Java 21**
+- **Spring Boot 4.0.1**
+- **Spring Security** (autenticação JWT)
+- **Spring Data JPA**
+- **PostgreSQL**
+- **Flyway** (migrações de banco de dados)
+- **Lombok**
+- **Maven**
+
+### Frontend
+- **React 19**
+- **TypeScript**
+- **Vite 7**
+- **TanStack Router** (roteamento)
+- **TanStack Query** (gerenciamento de estado servidor)
+- **TanStack Form** (formulários)
+- **Tailwind CSS 4**
+- **Radix UI** (componentes acessíveis)
+- **Zod** (validação)
+- **Axios** (cliente HTTP)
+- **Biome** (linting e formatação)
+- **Vitest** (testes)
+
+---
+
+## Instruções para Executar
 
 ### Pré-requisitos
 
-Tenha instalado Python (3.10+) e o runtime JavaScript Bun.
+- **Java 21+**
+- **Maven**
+- **Bun** (runtime JavaScript)
+- **Docker** (para PostgreSQL)
 
-- **Bun (Linux/macOS):**
+**Instalação do Bun:**
+
+- Linux/macOS:
   ```bash
-  curl -fsSL [https://bun.sh/install](https://bun.sh/install) | bash
+  curl -fsSL https://bun.sh/install | bash
   ```
-- **Bun (Windows):**
+- Windows:
   ```powershell
   powershell -c "irm bun.sh/install.ps1 | iex"
   ```
 
 ---
 
-### Terminal 1: Backend (Django API)
+### Terminal 1: Backend (Spring Boot API)
 
-1.  **Navegue até a pasta do backend:**
+1. **Navegue até a pasta do backend:**
+   ```bash
+   cd spring-api
+   ```
 
-    ```bash
-    # Ex: cd pasta-do-backend
-    ```
+2. **Inicie o banco de dados (Docker Compose):**
+   ```bash
+   docker compose up -d
+   ```
 
-2.  **Ative o ambiente de desenvolvimento Python:**
-    - _Linux/macOS:_
-      ```bash
-      source environment/bin/activate
-      ```
-    - _Windows:_
-      ```bash
-      .\environment\Scripts\activate
-      ```
+3. **Execute a aplicação:**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-3.  **Execute as migrações**
-
-    ```bash
-    python manage.py migrate
-    ```
-
-4.  **Criar um super usuário** (Essencial para testes):
-
-    ```bash
-    python manage.py createsuperuser
-    ```
-
-5.  **Iniciar o servidor:**
-    ```bash
-    python manage.py runserver
-    ```
-    ✅ O backend estará rodando em: `http://127.0.0.1:8000`
+   O backend estará rodando em: `http://localhost:8080`
 
 ---
 
 ### Terminal 2: Frontend (React)
 
-1.  **No terminal, entre na pasta do projeto:**
+1. **Navegue até a pasta do frontend:**
+   ```bash
+   cd front-end
+   ```
 
-    ```bash
-    cd front-django-api
-    ```
+2. **Instale as dependências:**
+   ```bash
+   bun install
+   ```
 
-2.  **Instale as dependências:**
+3. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   bun dev
+   ```
 
-    ```bash
-    bun install
-    ```
-
-3.  **Inicie o servidor de desenvolvimento:**
-    ```bash
-    bun dev
-    ```
-    ✅ Acesse a aplicação em: `http://localhost:3000`
-# Classrom
+   Acesse a aplicação em: `http://localhost:3000`
