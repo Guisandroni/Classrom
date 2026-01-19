@@ -6,9 +6,7 @@ import {
   LayoutDashboard,
   Library,
   Users,
-  UserPlus,
   ClipboardList,
-  FolderOpen,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -88,16 +86,6 @@ const studentNavItems: NavItem[] = [
 
 export function DashboardSidebar({ role }: SidebarProps) {
   const logoutMutation = useLogout();
-
-  const getInitials = (name?: string) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   const handleLogout = () => {
     logoutMutation.mutate();
