@@ -1,20 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Clock,
-  GraduationCap,
-  Loader2,
-  BookOpen,
-  Users,
-  CheckCircle2,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEnrollments, useResources } from "@/api/hooks";
 
 export const Route = createFileRoute("/dashboard/my-enrollment")({
@@ -31,7 +16,7 @@ function MyEnrollmentPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando informações de matrícula...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading enrollment information...</span>
       </div>
     );
   }
@@ -40,27 +25,25 @@ function MyEnrollmentPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Minhas Matrículas
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Você ainda não está matriculado em nenhum curso
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            My Enrollments
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            You are not enrolled in any course yet
           </p>
         </div>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <GraduationCap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">
-              Entre em contato com o administrador para se matricular
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center">
+          <span className="material-icons-round text-5xl text-gray-400 mb-4">school</span>
+          <p className="text-gray-500 dark:text-gray-400">
+            Contact the administrator to enroll in a course
+          </p>
+        </div>
       </div>
     );
   }
 
   const extractTrainingName = (classGroupName: string): string => {
-    if (!classGroupName) return "Treinamento";
+    if (!classGroupName) return "Training";
     const dashPattern = classGroupName.split(/[-–—]/);
     if (dashPattern.length > 1) {
       return dashPattern[0].trim();
@@ -87,16 +70,12 @@ function MyEnrollmentPage() {
 
     const trainingName = extractTrainingName(enrollment.className || "");
 
-    let status: "active" | "completed" | "suspended" | "unknown" = "unknown";
-
-    status = "active";
-
     return {
       id: enrollment.id,
       enrollment,
       trainingName,
       courseName: enrollment.className,
-      status,
+      status: "active" as const,
       progress,
       completedLessons: completedResources,
       totalLessons: totalResources,
@@ -104,145 +83,151 @@ function MyEnrollmentPage() {
     };
   });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            <CheckCircle2 className="h-3 w-3 mr-1" />
-            Ativa
-          </Badge>
-        );
-      case "completed":
-        return (
-          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            <CheckCircle2 className="h-3 w-3 mr-1" />
-            Concluída
-          </Badge>
-        );
-      case "suspended":
-        return (
-          <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100">
-            <Clock className="h-3 w-3 mr-1" />
-            Não Iniciada
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
-            {status}
-          </Badge>
-        );
-    }
-  };
-
   const totalEnrollments = enrollmentDetails.length;
-  const totalLessons = enrollmentDetails.reduce(
-    (acc, e) => acc + e.totalLessons,
-    0,
-  );
-  const completedLessons = enrollmentDetails.reduce(
-    (acc, e) => acc + e.completedLessons,
-    0,
-  );
-  // Progress calculation available for future use
-  const _overallProgress =
-    totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-  void _overallProgress;
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Minhas Matrículas</h1>
-        <p className="text-gray-600 mt-1">
-          Você está matriculado em {totalEnrollments}{" "}
-          {totalEnrollments === 1 ? "Turma" : "Turmas"}
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">My Enrollments</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          You are enrolled in {totalEnrollments}{" "}
+          {totalEnrollments === 1 ? "class" : "classes"}
         </p>
       </div>
 
-      <div>
-        <div className="grid gap-4">
-          {enrollmentDetails.map((details) => (
-            <Card
-              key={details.id}
-              className="border-l-4 border-l-blue-600 hover:shadow-md transition-shadow"
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <GraduationCap className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl">
-                          {details.trainingName}
-                        </CardTitle>
-                        <CardDescription className="mt-1">
-                          {details.courseName}
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
-                      <span className="flex items-center gap-1">
-                        <BookOpen className="h-4 w-4" />
-                        {details.totalLessons} recursos
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <CheckCircle2 className="h-4 w-4" />
-                        {details.completedLessons} concluídos
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        Matrícula #{details.id}
-                      </span>
-                    </div>
+      {/* Enrollment Cards */}
+      <div className="space-y-4">
+        {enrollmentDetails.map((details) => (
+          <div
+            key={details.id}
+            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+          >
+            {/* Card Header with gradient */}
+            <div className="p-4 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800">
+              <div className="flex items-start justify-between">
+                <div className="flex gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shrink-0 shadow-md">
+                    <span className="material-icons-round text-xl">school</span>
                   </div>
-                  <div className="text-right ml-4">
-                    {getStatusBadge(details.status)}
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
+                      {details.trainingName}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                      {details.courseName}
+                    </p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {details.resources.length > 0 && (
-                    <div className="pt-4 border-t">
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="text-sm font-medium text-gray-900">
-                          Recursos do Curso
-                        </p>
-                        <Badge variant="outline">
-                          {details.resources.length} recursos
-                        </Badge>
-                      </div>
-                      <div className="grid gap-2 md:grid-cols-2">
-                        {details.resources.slice(0, 4).map((resource) => (
-                          <div
-                            key={resource.id}
-                            className="flex items-center gap-2 text-sm text-gray-600 p-2 bg-gray-50 rounded"
-                          >
-                            <BookOpen className="h-4 w-4 text-blue-600" />
-                            <span className="truncate">
-                              {resource.name}
-                            </span>
-                            {resource.draft && (
-                              <Badge
-                                variant="outline"
-                                className="ml-auto text-xs"
-                              >
-                                Rascunho
-                              </Badge>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                <span className="px-2.5 py-1 bg-green-50 dark:bg-green-900/20 text-xs font-medium rounded-full text-green-600 dark:text-green-400 flex items-center gap-1 shrink-0">
+                  <span className="material-icons-round text-sm">check_circle</span>
+                  Active
+                </span>
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-3 gap-4 p-4 border-b border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-9 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                  <span className="material-icons-round text-blue-600 dark:text-blue-400 text-lg">folder</span>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Resources</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {details.totalLessons}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-9 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                  <span className="material-icons-round text-green-600 dark:text-green-400 text-lg">check_circle</span>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Completed</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {details.completedLessons}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-9 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                  <span className="material-icons-round text-purple-600 dark:text-purple-400 text-lg">tag</span>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Enrollment</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    #{details.id}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            {details.totalLessons > 0 && (
+              <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700/30">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                    Course Progress
+                  </span>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                    {details.progress}%
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
+                    style={{ width: `${details.progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Resources Preview */}
+            {details.resources.length > 0 && (
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className="material-icons-round text-base text-gray-400">folder_open</span>
+                    Course Resources
+                  </h4>
+                  <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-xs font-medium rounded text-gray-500 dark:text-gray-400">
+                    {details.resources.length} items
+                  </span>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {details.resources.slice(0, 4).map((resource) => (
+                    <div
+                      key={resource.id}
+                      className="flex items-center gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                    >
+                      <span className="material-icons-round text-blue-600 dark:text-blue-400 text-lg">
+                        {resource.resourceType === "VIDEO"
+                          ? "play_circle"
+                          : resource.resourceType === "PDF"
+                            ? "picture_as_pdf"
+                            : "insert_drive_file"}
+                      </span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300 truncate flex-1">
+                        {resource.name}
+                      </span>
+                      {resource.draft && (
+                        <span className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-xs rounded text-gray-500 dark:text-gray-400">
+                          Draft
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {details.resources.length > 4 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                    +{details.resources.length - 4} more resources
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,23 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Users,
-  Loader2,
-  BookOpen,
-  FileText,
-  Video,
-  File,
-  Download,
-  Eye,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useClassGroups, useEnrollments, useStudents } from "@/api/hooks";
 import { authApi } from "@/api";
@@ -56,20 +39,19 @@ function MyClassPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Minha Turma</h1>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">My Classes</h2>
         </div>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-red-600 mb-2">
-              Erro ao carregar informações da turma
-            </p>
-            <p className="text-sm text-gray-500">
-              {classGroupsError?.message ||
-                enrollmentsError?.message ||
-                "Verifique sua conexão e tente novamente"}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 text-center">
+          <span className="material-icons-round text-5xl text-red-500 mb-4">error</span>
+          <p className="text-red-600 dark:text-red-400 mb-2 font-medium">
+            Error loading class information
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {classGroupsError?.message ||
+              enrollmentsError?.message ||
+              "Check your connection and try again"}
+          </p>
+        </div>
       </div>
     );
   }
@@ -78,7 +60,7 @@ function MyClassPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Carregando informações da turma...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading class information...</span>
       </div>
     );
   }
@@ -87,19 +69,17 @@ function MyClassPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Minha Turma</h1>
-          <p className="text-gray-600 mt-1">
-            Você ainda não está matriculado em nenhuma turma
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">My Classes</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            You are not enrolled in any class yet
           </p>
         </div>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">
-              Entre em contato com o administrador para se matricular
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center">
+          <span className="material-icons-round text-5xl text-gray-400 mb-4">school</span>
+          <p className="text-gray-500 dark:text-gray-400">
+            Contact the administrator to enroll in a class
+          </p>
+        </div>
       </div>
     );
   }
@@ -146,158 +126,171 @@ function MyClassPage() {
   const getResourceIcon = (type: string) => {
     switch (type) {
       case "PDF":
-        return <FileText className="h-4 w-4" />;
+        return "picture_as_pdf";
       case "VIDEO":
-        return <Video className="h-4 w-4" />;
+        return "play_circle";
       case "ZIP":
-        return <File className="h-4 w-4" />;
+        return "folder_zip";
       default:
-        return <File className="h-4 w-4" />;
+        return "insert_drive_file";
     }
   };
 
-  const getResourceBadge = (type: string) => {
-    const colors = {
-      PDF: "bg-red-100 text-red-700",
-      VIDEO: "bg-purple-100 text-purple-700",
-      ZIP: "bg-blue-100 text-blue-700",
-    };
-    return (
-      <Badge
-        className={
-          colors[type as keyof typeof colors] || "bg-gray-100 text-gray-700"
-        }
-      >
-        {getResourceIcon(type)}
-        <span className="ml-1">{type}</span>
-      </Badge>
-    );
+  const getResourceStyles = (type: string) => {
+    switch (type) {
+      case "VIDEO":
+        return {
+          bg: "bg-purple-100 dark:bg-purple-900/30",
+          text: "text-purple-600 dark:text-purple-400",
+          iconBg: "bg-purple-600",
+        };
+      case "PDF":
+        return {
+          bg: "bg-red-100 dark:bg-red-900/30",
+          text: "text-red-600 dark:text-red-400",
+          iconBg: "bg-red-600",
+        };
+      case "ZIP":
+        return {
+          bg: "bg-orange-100 dark:bg-orange-900/30",
+          text: "text-orange-600 dark:text-orange-400",
+          iconBg: "bg-orange-600",
+        };
+      default:
+        return {
+          bg: "bg-gray-100 dark:bg-gray-700",
+          text: "text-gray-600 dark:text-gray-400",
+          iconBg: "bg-gray-600",
+        };
+    }
   };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Minhas Turmas</h1>
-        <p className="text-gray-600 mt-1">
-          Você está matriculado em {classGroups.length}{" "}
-          {classGroups.length === 1 ? "turma" : "turmas"}
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">My Classes</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          You are enrolled in {classGroups.length}{" "}
+          {classGroups.length === 1 ? "class" : "classes"}
         </p>
       </div>
 
+      {/* Class Cards */}
       <div className="space-y-6">
         {classGroups.map((classGroup) => {
           const classInfo = getClassGroupInfo(classGroup);
 
           return (
-            <Card key={classGroup.id} className="border-l-4 border-l-blue-600">
-              <CardHeader>
+            <div
+              key={classGroup.id}
+              className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden"
+            >
+              {/* Class Header */}
+              <div className="p-4 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl">
-                      {classGroup.name}
-                    </CardTitle>
-                    <CardDescription className="mt-2">
-                      <div className="space-y-1">
-                        <div>
-                          <strong>Treinamento:</strong>{" "}
-                          {classGroup.trainingName}
-                        </div>
-                        <div>ID da Turma: #{classGroup.id}</div>
-                      </div>
-                    </CardDescription>
-                  </div>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-                    <Users className="h-3 w-3 mr-1" />
-                    {classInfo.totalStudents} alunos
-                  </Badge>
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="flex items-start gap-3">
-                    <Users className="h-5 w-5 text-gray-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        Alunos
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {classInfo.totalStudents} matriculados
-                      </p>
+                  <div className="flex gap-3">
+                    <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-md">
+                      <span className="material-icons-round text-xl">class</span>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <BookOpen className="h-5 w-5 text-gray-400 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        Recursos
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {classInfo.totalResources} disponíveis
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {classInfo.resources.length > 0 ? (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Recursos desta Turma
+                      <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                        {classGroup.name}
                       </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="material-icons-round text-sm text-gray-400">school</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {classGroup.trainingName}
+                        </span>
+                      </div>
                     </div>
-                    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                      {classInfo.resources.map((resource) => (
-                        <Card
-                          key={resource.id}
-                          className="hover:shadow-md transition-shadow cursor-pointer"
-                        >
-                          <CardContent className="p-4">
+                  </div>
+                  <span className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900/30 text-xs font-medium rounded-full text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                    <span className="material-icons-round text-sm">people</span>
+                    {classInfo.totalStudents} students
+                  </span>
+                </div>
+              </div>
+
+              {/* Class Stats */}
+              <div className="grid grid-cols-2 gap-4 p-4 border-b border-gray-100 dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <span className="material-icons-round text-blue-600 dark:text-blue-400">people</span>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">Students</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {classInfo.totalStudents} enrolled
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                    <span className="material-icons-round text-green-600 dark:text-green-400">folder</span>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">Resources</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {classInfo.totalResources} available
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Resources Section */}
+              <div className="p-4">
+                {classInfo.resources.length > 0 ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <span className="material-icons-round text-lg text-gray-400">folder_open</span>
+                        Class Resources
+                      </h4>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {classInfo.resources.map((resource) => {
+                        const styles = getResourceStyles(resource.resourceType);
+                        return (
+                          <div
+                            key={resource.id}
+                            className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 hover:shadow-md transition-shadow cursor-pointer"
+                            onClick={() => handleResourceClick(resource)}
+                          >
                             <div className="flex items-start gap-3">
-                              <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
-                                {getResourceIcon(resource.resourceType)}
+                              <div
+                                className={`h-10 w-10 rounded-lg ${styles.iconBg} flex items-center justify-center text-white shrink-0`}
+                              >
+                                <span className="material-icons-round text-lg">
+                                  {getResourceIcon(resource.resourceType)}
+                                </span>
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-1">
-                                  <h5 className="font-medium text-sm truncate">
-                                    {resource.name}
-                                  </h5>
-                                  {getResourceBadge(resource.resourceType)}
-                                </div>
-                                <p className="text-xs text-gray-500 line-clamp-2 mb-2">
-                                  {resource.description}
-                                </p>
-                                <div className="flex items-center gap-2 flex-wrap mb-2">
-                                  {resource.previousAccess && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs bg-green-50 text-green-700"
-                                    >
-                                      Acesso Prévio
-                                    </Badge>
-                                  )}
-                                  <Badge
-                                    variant="outline"
-                                    className={`text-xs ${
-                                      resource.resourceType === "VIDEO"
-                                        ? "bg-blue-50 text-blue-700"
-                                        : resource.resourceType === "PDF"
-                                          ? "bg-red-50 text-red-700"
-                                          : "bg-green-50 text-green-700"
-                                    }`}
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span
+                                    className={`px-2 py-0.5 ${styles.bg} ${styles.text} text-xs font-medium rounded`}
                                   >
-                                    {resource.resourceType === "VIDEO"
-                                      ? "Clique para assistir"
-                                      : resource.resourceType === "PDF"
-                                        ? "Clique para visualizar"
-                                        : "Clique para baixar"}
-                                  </Badge>
+                                    {resource.resourceType}
+                                  </span>
+                                  {resource.previousAccess && (
+                                    <span className="px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-xs font-medium rounded text-green-600 dark:text-green-400">
+                                      Early Access
+                                    </span>
+                                  )}
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <h5 className="font-medium text-sm text-gray-900 dark:text-white truncate">
+                                  {resource.name}
+                                </h5>
+                                {resource.description && (
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+                                    {resource.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-2 mt-2">
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="flex-1"
+                                    className="h-8 text-xs"
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleResourceClick(resource);
@@ -305,51 +298,44 @@ function MyClassPage() {
                                   >
                                     {resource.resourceType === "VIDEO" ? (
                                       <>
-                                        <Eye className="h-3 w-3 mr-1" />
-                                        Assistir
+                                        <span className="material-icons-round text-sm mr-1">play_arrow</span>
+                                        Watch
                                       </>
                                     ) : resource.resourceType === "PDF" ? (
                                       <>
-                                        <FileText className="h-3 w-3 mr-1" />
-                                        Abrir PDF
+                                        <span className="material-icons-round text-sm mr-1">visibility</span>
+                                        View
                                       </>
                                     ) : (
                                       <>
-                                        <Download className="h-3 w-3 mr-1" />
-                                        Baixar ZIP
+                                        <span className="material-icons-round text-sm mr-1">download</span>
+                                        Download
                                       </>
                                     )}
                                   </Button>
-                                  {(resource.resourceType === "PDF" ||
-                                    resource.resourceType === "VIDEO") && (
-                                    <Button size="sm" variant="outline">
-                                      <Download className="h-3 w-3" />
-                                    </Button>
-                                  )}
                                 </div>
                               </div>
                             </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8 border rounded-lg bg-gray-50">
-                    <BookOpen className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500">
-                      Nenhum recurso publicado disponível nesta turma ainda
+                  <div className="text-center py-8 bg-gray-50 dark:bg-gray-700/30 rounded-xl">
+                    <span className="material-icons-round text-4xl text-gray-400 mb-2">folder_off</span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      No published resources available yet
                     </p>
                     {!isAdmin && (
-                      <p className="text-xs text-gray-400 mt-1">
-                        Apenas recursos com acesso prévio e que não estão como
-                        rascunho estão disponíveis
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        Only published resources with access are shown
                       </p>
                     )}
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           );
         })}
       </div>

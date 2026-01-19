@@ -1,22 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -24,17 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Loader2,
-  Search,
-  Video,
-  FileText,
-  File,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   useResources,
   useClassGroups,
@@ -134,31 +109,45 @@ function ResourcesPage() {
       return matchesSearch && matchesType;
     }) || [];
 
-  const getTypeBadge = (type: string) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case "VIDEO":
-        return (
-          <Badge className="bg-blue-100 text-blue-700">
-            <Video className="h-3 w-3 mr-1" />
-            Video
-          </Badge>
-        );
+        return "play_circle";
       case "PDF":
-        return (
-          <Badge className="bg-purple-100 text-purple-700">
-            <FileText className="h-3 w-3 mr-1" />
-            PDF
-          </Badge>
-        );
+        return "picture_as_pdf";
       case "ZIP":
-        return (
-          <Badge className="bg-orange-100 text-orange-700">
-            <File className="h-3 w-3 mr-1" />
-            ZIP
-          </Badge>
-        );
+        return "folder_zip";
       default:
-        return <Badge>{type}</Badge>;
+        return "insert_drive_file";
+    }
+  };
+
+  const getTypeStyles = (type: string) => {
+    switch (type) {
+      case "VIDEO":
+        return {
+          bg: "bg-purple-100 dark:bg-purple-900/30",
+          text: "text-purple-600 dark:text-purple-400",
+          iconBg: "bg-purple-600",
+        };
+      case "PDF":
+        return {
+          bg: "bg-red-100 dark:bg-red-900/30",
+          text: "text-red-600 dark:text-red-400",
+          iconBg: "bg-red-600",
+        };
+      case "ZIP":
+        return {
+          bg: "bg-orange-100 dark:bg-orange-900/30",
+          text: "text-orange-600 dark:text-orange-400",
+          iconBg: "bg-orange-600",
+        };
+      default:
+        return {
+          bg: "bg-gray-100 dark:bg-gray-700",
+          text: "text-gray-600 dark:text-gray-400",
+          iconBg: "bg-gray-600",
+        };
     }
   };
 
@@ -166,171 +155,187 @@ function ResourcesPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Loading resources...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading resources...</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Resources</h1>
-          <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Manage all resources and materials for classes
-          </p>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-end">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Manage Resources
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {resources?.length || 0} resources registered
+            </p>
+          </div>
+          <Button
+            onClick={handleCreate}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition-colors"
+          >
+            <span className="material-icons-round text-lg">add</span>
+            New Resource
+          </Button>
         </div>
-        <Button
-          onClick={handleCreate}
-          className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          New Resource
-        </Button>
+
+        {/* Search and Filter */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+              search
+            </span>
+            <Input
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 placeholder-gray-400 dark:placeholder-gray-500 transition-shadow shadow-sm"
+              placeholder="Search resources..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={filterType} onValueChange={setFilterType}>
+            <SelectTrigger className="w-full sm:w-[150px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-xl">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="VIDEO">Video</SelectItem>
+              <SelectItem value="PDF">PDF</SelectItem>
+              <SelectItem value="ZIP">ZIP</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <CardTitle>Resource List</CardTitle>
-              <CardDescription>
-                {resources?.length || 0} resources registered
-              </CardDescription>
-            </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search resources..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-full sm:w-[150px]">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="VIDEO">Video</SelectItem>
-                  <SelectItem value="PDF">PDF</SelectItem>
-                  <SelectItem value="ZIP">ZIP</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      {/* Resource Cards */}
+      <div className="flex flex-col gap-4">
+        {filteredResources.length === 0 ? (
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <span className="material-icons-round text-5xl text-gray-400 mb-4">
+              folder_open
+            </span>
+            <p className="text-gray-500 dark:text-gray-400">
+              {searchQuery || filterType !== "all"
+                ? "No resource found"
+                : "No resources registered yet"}
+            </p>
           </div>
-        </CardHeader>
-        <CardContent>
-          {filteredResources.length === 0 ? (
-            <div className="text-center py-12">
-              <File className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">
-                {searchQuery || filterType !== "all"
-                  ? "No resource found"
-                  : "No resources registered yet"}
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-              <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Class</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredResources.map((resource) => (
-                  <TableRow
-                    key={resource.id}
-                    className={
-                      resource.resourceType === "VIDEO"
-                        ? "cursor-pointer hover:bg-gray-50"
-                        : ""
-                    }
-                    onClick={() =>
-                      resource.resourceType === "VIDEO" &&
-                      handleVideoClick(resource)
-                    }
+        ) : (
+          filteredResources.map((resource) => {
+            const typeStyles = getTypeStyles(resource.resourceType);
+            const isVideo = resource.resourceType === "VIDEO";
+
+            return (
+              <div
+                key={resource.id}
+                onClick={() => isVideo && handleVideoClick(resource)}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow ${isVideo ? "cursor-pointer" : ""}`}
+              >
+                <div className="flex gap-4">
+                  {/* Resource Icon */}
+                  <div
+                    className={`h-12 w-12 rounded-xl ${typeStyles.iconBg} flex items-center justify-center text-white shrink-0 shadow-md`}
                   >
-                    <TableCell>
-                      <Badge variant="outline">#{resource.id}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium flex items-center gap-2">
-                          {resource.name}
-                          {resource.resourceType === "VIDEO" && (
-                            <Badge variant="outline" className="text-xs">
-                              Click to watch
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-500 max-w-md truncate">
-                          {resource.description}
-                        </div>
+                    <span className="material-icons-round text-xl">
+                      {getTypeIcon(resource.resourceType)}
+                    </span>
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between mb-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-xs font-mono rounded text-gray-500 dark:text-gray-400">
+                          #{resource.id}
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 ${typeStyles.bg} ${typeStyles.text} text-xs font-medium rounded flex items-center gap-1`}
+                        >
+                          <span className="material-icons-round text-xs">
+                            {getTypeIcon(resource.resourceType)}
+                          </span>
+                          {resource.resourceType}
+                        </span>
+                        {resource.draft ? (
+                          <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-xs font-medium rounded text-gray-500 dark:text-gray-400">
+                            Draft
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-xs font-medium rounded text-green-600 dark:text-green-400">
+                            Published
+                          </span>
+                        )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">{resource.className}</div>
-                    </TableCell>
-                    <TableCell>
-                      {getTypeBadge(resource.resourceType)}
-                    </TableCell>
-                    <TableCell>
-                      {resource.draft ? (
-                        <Badge className="bg-gray-100 text-gray-700">
-                          Draft
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-green-100 text-green-700">
-                          Published
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
+                      <div className="flex gap-1 -mr-2">
+                        <button
+                          className="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleEdit(resource);
                           }}
                           title="Edit resource"
                         >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          <span className="material-icons-round text-lg">edit</span>
+                        </button>
+                        <button
+                          className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(resource);
                           }}
                           title="Delete resource"
                         >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <span className="material-icons-round text-lg">delete_outline</span>
+                        </button>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                    </div>
 
+                    <h3 className="font-semibold text-base text-gray-900 dark:text-white truncate">
+                      {resource.name}
+                    </h3>
+
+                    {resource.description && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mt-1">
+                        {resource.description}
+                      </p>
+                    )}
+
+                    {/* Class Info */}
+                    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                      <span className="material-icons-round text-base text-gray-400">
+                        class
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {resource.className}
+                      </span>
+                      {isVideo && (
+                        <span className="ml-auto text-xs font-medium text-purple-600 dark:text-purple-400 flex items-center gap-1">
+                          <span className="material-icons-round text-sm">play_arrow</span>
+                          Click to watch
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Floating Action Button for Mobile */}
+      <div className="fixed bottom-20 right-4 z-40 lg:hidden">
+        <Button
+          onClick={handleCreate}
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl w-14 h-14 flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-95"
+        >
+          <span className="material-icons-round text-2xl">add</span>
+        </Button>
+      </div>
+
+      {/* Forms */}
       <ResourceForm
         open={formOpen}
         onOpenChange={setFormOpen}
@@ -351,7 +356,8 @@ function ResourcesPage() {
       />
 
       <VideoPlayerSheet
-        open={videoOpen} onOpenChange={setVideoOpen}
+        open={videoOpen}
+        onOpenChange={setVideoOpen}
         resource={selectedVideoResource}
       />
     </div>

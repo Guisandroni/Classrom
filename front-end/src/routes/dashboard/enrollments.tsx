@@ -1,32 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  Trash2,
-  Loader2,
-  Search,
-  UserCheck,
-  Users,
-  GraduationCap,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   useEnrollments,
   useClassGroups,
@@ -97,139 +73,154 @@ function EnrollmentsPage() {
           .includes(searchQuery.toLowerCase()),
     ) || [];
 
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Loading enrollments...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading enrollments...</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Enrollments</h1>
-          <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Manage student enrollments in classes
-          </p>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-end">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Manage Enrollments
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {enrollments?.length || 0} enrollments registered
+            </p>
+          </div>
+          <Button
+            onClick={handleCreate}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition-colors"
+          >
+            <span className="material-icons-round text-lg">add</span>
+            New Enrollment
+          </Button>
         </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+            search
+          </span>
+          <Input
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 placeholder-gray-400 dark:placeholder-gray-500 transition-shadow shadow-sm"
+            placeholder="Search by student or class..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Enrollment Cards */}
+      <div className="flex flex-col gap-4">
+        {filteredEnrollments.length === 0 ? (
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <span className="material-icons-round text-5xl text-gray-400 mb-4">
+              how_to_reg
+            </span>
+            <p className="text-gray-500 dark:text-gray-400">
+              {searchQuery
+                ? "No enrollment found"
+                : "No enrollments registered yet"}
+            </p>
+          </div>
+        ) : (
+          filteredEnrollments.map((enrollment) => (
+            <div
+              key={enrollment.id}
+              className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+            >
+              <div className="flex gap-4">
+                {/* Student Avatar */}
+                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-md">
+                  {getInitials(enrollment.studentName || "?")}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between mb-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-xs font-mono rounded text-gray-500 dark:text-gray-400">
+                        #{enrollment.id}
+                      </span>
+                      <span className="px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-xs font-medium rounded text-green-600 dark:text-green-400 flex items-center gap-1">
+                        <span className="material-icons-round text-xs">check_circle</span>
+                        Active
+                      </span>
+                    </div>
+                    <button
+                      className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors -mr-2"
+                      onClick={() => handleDelete(enrollment)}
+                      title="Remove enrollment"
+                    >
+                      <span className="material-icons-round text-lg">delete_outline</span>
+                    </button>
+                  </div>
+
+                  {/* Student Info */}
+                  <h3 className="font-semibold text-base text-gray-900 dark:text-white truncate">
+                    {enrollment.studentName}
+                  </h3>
+
+                  {/* Class Info */}
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="material-icons-round text-base text-green-600 dark:text-green-400">
+                      class
+                    </span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                      {enrollment.className}
+                    </span>
+                  </div>
+
+                  {/* IDs Section */}
+                  <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center gap-1.5">
+                      <span className="material-icons-round text-sm text-gray-400">person</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        Student ID: <span className="font-medium">{enrollment.studentId}</span>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="material-icons-round text-sm text-gray-400">class</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        Class ID: <span className="font-medium">{enrollment.classId}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Floating Action Button for Mobile */}
+      <div className="fixed bottom-20 right-4 z-40 lg:hidden">
         <Button
           onClick={handleCreate}
-          className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl w-14 h-14 flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-95"
         >
-          <Plus className="mr-2 h-4 w-4" />
-          New Enrollment
+          <span className="material-icons-round text-2xl">add</span>
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <CardTitle>Enrollment List</CardTitle>
-              <CardDescription>
-                {enrollments?.length || 0} enrollments registered
-              </CardDescription>
-            </div>
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search enrollment..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {filteredEnrollments.length === 0 ? (
-            <div className="text-center py-12">
-              <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">
-                {searchQuery
-                  ? "No enrollment found"
-                  : "No enrollments registered yet"}
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-              <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Class</TableHead>
-                  <TableHead>IDs</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEnrollments.map((enrollment) => (
-                  <TableRow key={enrollment.id}>
-                    <TableCell>
-                      <Badge variant="outline">#{enrollment.id}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-blue-600" />
-                        <div>
-                          <div className="font-medium">
-                            {enrollment.studentName}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            Student ID: {enrollment.studentId}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <GraduationCap className="h-4 w-4 text-green-600" />
-                        <div>
-                          <div className="font-medium">
-                            {enrollment.className}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            Class ID: {enrollment.classId}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Badge variant="outline" className="text-xs">
-                          Student: {enrollment.studentId}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          Class: {enrollment.classId}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(enrollment)}
-                          title="Delete enrollment"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
+      {/* Forms */}
       <EnrollmentForm
         open={formOpen}
         onOpenChange={setFormOpen}

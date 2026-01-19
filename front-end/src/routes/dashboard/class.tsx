@@ -1,34 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Search,
-  Users,
-  Calendar,
-  Loader2,
-  GraduationCap,
-  Clock,
-  Plus,
-  Edit,
-  Trash2,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   useClassGroups,
   useTrainings,
@@ -48,8 +22,7 @@ function ClassGroupsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedClassGroup, setSelectedClassGroup] =
-    useState<ClassGroup | null>(null);
+  const [selectedClassGroup, setSelectedClassGroup] = useState<ClassGroup | null>(null);
 
   const { data: classGroups, isLoading: classGroupsLoading } = useClassGroups();
   const { data: trainings, isLoading: trainingsLoading } = useTrainings();
@@ -59,17 +32,7 @@ function ClassGroupsPage() {
   const updateMutation = useUpdateClassGroup();
   const deleteMutation = useDeleteClassGroup();
 
-  const isLoading =
-    classGroupsLoading || trainingsLoading || enrollmentsLoading;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2">Loading classes...</span>
-      </div>
-    );
-  }
+  const isLoading = classGroupsLoading || trainingsLoading || enrollmentsLoading;
 
   const enrichedClassGroups =
     classGroups?.map((classGroup) => {
@@ -103,42 +66,12 @@ function ClassGroupsPage() {
     });
   };
 
-  const getStatusBadge = (status: "upcoming" | "active" | "completed") => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            <Clock className="h-3 w-3 mr-1" />
-            In Progress
-          </Badge>
-        );
-      case "upcoming":
-        return (
-          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            <Calendar className="h-3 w-3 mr-1" />
-            Upcoming
-          </Badge>
-        );
-      case "completed":
-        return (
-          <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
-            Completed
-          </Badge>
-        );
-      default:
-        return <Badge>{status}</Badge>;
-    }
-  };
-
   const filteredClassGroups = enrichedClassGroups.filter((classGroup) => {
     const matchesSearch =
       classGroup.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (classGroup.trainingName || "")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      (classGroup.trainingName || "").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
-
 
   const handleCreate = () => {
     setSelectedClassGroup(null);
@@ -164,9 +97,6 @@ function ClassGroupsPage() {
             setFormOpen(false);
             setSelectedClassGroup(null);
           },
-          onError: (error) => {
-            console.error("Error updating class:", error);
-          },
         },
       );
     } else {
@@ -174,9 +104,6 @@ function ClassGroupsPage() {
         onSuccess: () => {
           setFormOpen(false);
           setSelectedClassGroup(null);
-        },
-        onError: (error) => {
-          console.error("Error creating class:", error);
         },
       });
     }
@@ -193,198 +120,172 @@ function ClassGroupsPage() {
     }
   };
 
-  if (enrichedClassGroups.length === 0) {
+  if (isLoading) {
     return (
-      <div className="space-y-4 md:space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Classes</h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">
-              No classes available at the moment
-            </p>
-          </div>
-          <Button
-            onClick={handleCreate}
-            className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            New Class
-          </Button>
-        </div>
-        <Card>
-          <CardContent className="py-12 text-center">
-            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">
-              Classes will appear here when created
-            </p>
-          </CardContent>
-        </Card>
-        <ClassGroupForm
-          open={formOpen}
-          onOpenChange={setFormOpen}
-          classGroup={selectedClassGroup}
-          trainings={trainings || []}
-          onSubmit={handleFormSubmit}
-          isLoading={createMutation.isPending || updateMutation.isPending}
-        />
-
-        <DeleteConfirmDialog
-          open={deleteOpen}
-          onOpenChange={setDeleteOpen}
-          title="Delete Class"
-          description="Are you sure you want to delete this class? This action cannot be undone and all related data will be lost."
-          itemName={selectedClassGroup?.name}
-          onConfirm={handleDeleteConfirm}
-          isLoading={deleteMutation.isPending}
-        />
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading classes...</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Classes</h1>
-          <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Manage all classes and their trainings
-          </p>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-end">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Manage Classes</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {enrichedClassGroups.length} classes registered
+            </p>
+          </div>
+          <Button
+            onClick={handleCreate}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2 transition-colors"
+          >
+            <span className="material-icons-round text-lg">add</span>
+            New Class
+          </Button>
         </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+            search
+          </span>
+          <Input
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 placeholder-gray-400 dark:placeholder-gray-500 transition-shadow shadow-sm"
+            placeholder="Search classes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Class Cards */}
+      <div className="flex flex-col gap-4">
+        {filteredClassGroups.length === 0 ? (
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <span className="material-icons-round text-5xl text-gray-400 mb-4">class</span>
+            <p className="text-gray-500 dark:text-gray-400">
+              {searchQuery ? "No class found" : "No classes registered yet"}
+            </p>
+          </div>
+        ) : (
+          filteredClassGroups.map((classGroup) => {
+            const getStatusStyles = () => {
+              switch (classGroup.status) {
+                case "active":
+                  return {
+                    bg: "bg-green-50 dark:bg-green-900/30",
+                    text: "text-green-600 dark:text-green-400",
+                    icon: "check_circle",
+                    label: "Active",
+                  };
+                case "upcoming":
+                  return {
+                    bg: "bg-blue-50 dark:bg-blue-900/30",
+                    text: "text-blue-600 dark:text-blue-400",
+                    icon: "event",
+                    label: "Upcoming",
+                  };
+                case "completed":
+                  return {
+                    bg: "bg-gray-100 dark:bg-gray-700",
+                    text: "text-gray-500 dark:text-gray-400",
+                    icon: "check",
+                    label: "Completed",
+                  };
+              }
+            };
+
+            const statusStyles = getStatusStyles();
+
+            return (
+              <div
+                key={classGroup.id}
+                className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700"
+              >
+                {/* Card Header */}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600">
+                      #{classGroup.id}
+                    </span>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${statusStyles.bg} ${statusStyles.text}`}>
+                      <span className="material-icons-round text-[14px]">{statusStyles.icon}</span>
+                      {statusStyles.label}
+                    </span>
+                  </div>
+                  <div className="flex gap-1 -mr-2">
+                    <button
+                      className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      onClick={() => handleEdit(classGroup)}
+                      title="Edit class"
+                    >
+                      <span className="material-icons-round text-lg">edit</span>
+                    </button>
+                    <button
+                      className="p-2 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                      onClick={() => handleDelete(classGroup)}
+                      title="Delete class"
+                    >
+                      <span className="material-icons-round text-lg">delete</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Class Name */}
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                  {classGroup.name}
+                </h3>
+
+                {/* Training Info */}
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-1.5">
+                  <span className="material-icons-round text-base">school</span>
+                  {classGroup.trainingName} (Training #{classGroup.trainingId})
+                </p>
+
+                {/* Card Footer */}
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase">
+                      Period
+                    </span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-0.5">
+                      {formatDate(classGroup.startDate)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase">
+                      Students
+                    </span>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="material-icons-round text-base text-gray-400">group</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {classGroup.enrollmentCount} enrolled
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Floating Action Button for Mobile */}
+      <div className="fixed bottom-20 right-4 z-40 lg:hidden">
         <Button
           onClick={handleCreate}
-          className="!bg-blue-600 !text-white hover:!bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200 font-semibold px-4 sm:px-6 py-2.5 rounded-lg w-full sm:w-auto"
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl w-14 h-14 flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-95"
         >
-          <Plus className="mr-2 h-4 w-4" />
-          New Class
+          <span className="material-icons-round text-2xl">add</span>
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <CardTitle>Class List</CardTitle>
-              <CardDescription>
-                {enrichedClassGroups.length} classes registered
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search classes..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {filteredClassGroups.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                {searchQuery
-                  ? "No class found with these filters"
-                  : "No classes registered yet"}
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-              <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Class Name</TableHead>
-                  <TableHead>Training</TableHead>
-                  <TableHead>Period</TableHead>
-                  <TableHead>Students</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredClassGroups.map((classGroup) => (
-                  <TableRow key={classGroup.id}>
-                    <TableCell>
-                      <Badge variant="outline">#{classGroup.id}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">{classGroup.name}</div>
-                        <div className="text-xs text-gray-500">
-                          Class ID: {classGroup.id}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <GraduationCap className="h-4 w-4 text-blue-600" />
-                        <div>
-                          <div className="font-medium text-sm">
-                            {classGroup.trainingName}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            Training #{classGroup.trainingId}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm">
-                          <Calendar className="h-3 w-3 inline mr-1" />
-                          {formatDate(classGroup.startDate)}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          to {formatDate(classGroup.endDate)}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-gray-500" />
-                        <span className="font-medium">
-                          {classGroup.enrollmentCount}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          enrolled
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(classGroup.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleEdit(classGroup)}
-                          title="Edit class"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(classGroup)}
-                          title="Delete class"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
+      {/* Forms */}
       <ClassGroupForm
         open={formOpen}
         onOpenChange={setFormOpen}
@@ -403,7 +304,6 @@ function ClassGroupsPage() {
         onConfirm={handleDeleteConfirm}
         isLoading={deleteMutation.isPending}
       />
-
     </div>
   );
 }
