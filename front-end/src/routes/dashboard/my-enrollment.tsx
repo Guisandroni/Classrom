@@ -7,9 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import {
-  Calendar,
   Clock,
   GraduationCap,
   Loader2,
@@ -78,7 +76,7 @@ function MyEnrollmentPage() {
 
   const enrollmentDetails = enrollments.map((enrollment) => {
     const courseResources =
-      resources?.filter((r) => r.class_group === enrollment.class_group) || [];
+      resources?.filter((r) => r.classId === enrollment.classId) || [];
 
     const totalResources = courseResources.length;
     const completedResources = courseResources.filter((r) => !r.draft).length;
@@ -87,7 +85,7 @@ function MyEnrollmentPage() {
         ? Math.round((completedResources / totalResources) * 100)
         : 0;
 
-    const trainingName = extractTrainingName(enrollment.class_group_name);
+    const trainingName = extractTrainingName(enrollment.className || "");
 
     let status: "active" | "completed" | "suspended" | "unknown" = "unknown";
 
@@ -97,7 +95,7 @@ function MyEnrollmentPage() {
       id: enrollment.id,
       enrollment,
       trainingName,
-      courseName: enrollment.class_group_name,
+      courseName: enrollment.className,
       status,
       progress,
       completedLessons: completedResources,
@@ -147,8 +145,10 @@ function MyEnrollmentPage() {
     (acc, e) => acc + e.completedLessons,
     0,
   );
-  const overallProgress =
+  // Progress calculation available for future use
+  const _overallProgress =
     totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  void _overallProgress;
 
   return (
     <div className="space-y-6">
@@ -223,7 +223,7 @@ function MyEnrollmentPage() {
                           >
                             <BookOpen className="h-4 w-4 text-blue-600" />
                             <span className="truncate">
-                              {resource.resource_name}
+                              {resource.name}
                             </span>
                             {resource.draft && (
                               <Badge
