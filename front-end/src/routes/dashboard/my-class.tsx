@@ -6,16 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Users,
-  Mail,
-  Search,
   Loader2,
-  GraduationCap,
   BookOpen,
   FileText,
   Video,
@@ -34,7 +29,6 @@ export const Route = createFileRoute("/dashboard/my-class")({
 });
 
 function MyClassPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [videoResource, setVideoResource] = useState<Resource | null>(null);
   const [videoOpen, setVideoOpen] = useState(false);
 
@@ -112,13 +106,13 @@ function MyClassPage() {
 
   const getClassGroupInfo = (classGroup: (typeof classGroups)[0]) => {
     const classEnrollments =
-      enrollments?.filter((e) => e.class_group === classGroup.id) || [];
+      enrollments?.filter((e) => e.classId === classGroup.id) || [];
 
     const classmates = classEnrollments.map((enrollment) => {
-      const student = allStudents?.find((s) => s.id === enrollment.student);
+      const student = allStudents?.find((s) => s.id === enrollment.studentId);
       return {
-        id: enrollment.student,
-        name: enrollment.student_name,
+        id: enrollment.studentId,
+        name: enrollment.studentName || student?.name || "Unknown",
         email: student?.email || "email@example.com",
         avatar: "",
         enrollmentDate: classGroup.name,
@@ -140,31 +134,22 @@ function MyClassPage() {
     };
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   const handleResourceClick = (resource: Resource) => {
-    if (resource.resource_type === "video") {
+    if (resource.resourceType === "VIDEO") {
       setVideoResource(resource);
       setVideoOpen(true);
-    } else if (resource.resource_type === "pdf") {
+    } else if (resource.resourceType === "PDF") {
       window.open(`/api/resources/${resource.id}/download`, "_blank");
     }
   };
 
   const getResourceIcon = (type: string) => {
     switch (type) {
-      case "pdf":
+      case "PDF":
         return <FileText className="h-4 w-4" />;
-      case "video":
+      case "VIDEO":
         return <Video className="h-4 w-4" />;
-      case "zip":
+      case "ZIP":
         return <File className="h-4 w-4" />;
       default:
         return <File className="h-4 w-4" />;
@@ -173,9 +158,9 @@ function MyClassPage() {
 
   const getResourceBadge = (type: string) => {
     const colors = {
-      pdf: "bg-red-100 text-red-700",
-      video: "bg-purple-100 text-purple-700",
-      zip: "bg-blue-100 text-blue-700",
+      PDF: "bg-red-100 text-red-700",
+      VIDEO: "bg-purple-100 text-purple-700",
+      ZIP: "bg-blue-100 text-blue-700",
     };
     return (
       <Badge
@@ -184,7 +169,7 @@ function MyClassPage() {
         }
       >
         {getResourceIcon(type)}
-        <span className="ml-1">{type.toUpperCase()}</span>
+        <span className="ml-1">{type}</span>
       </Badge>
     );
   };
@@ -202,13 +187,6 @@ function MyClassPage() {
       <div className="space-y-6">
         {classGroups.map((classGroup) => {
           const classInfo = getClassGroupInfo(classGroup);
-          const filteredClassmates = classInfo.classmates.filter(
-            (classmate) =>
-              classmate.name
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-              classmate.email.toLowerCase().includes(searchQuery.toLowerCase()),
-          );
 
           return (
             <Card key={classGroup.id} className="border-l-4 border-l-blue-600">
@@ -222,7 +200,7 @@ function MyClassPage() {
                       <div className="space-y-1">
                         <div>
                           <strong>Treinamento:</strong>{" "}
-                          {classGroup.training_name}
+                          {classGroup.trainingName}
                         </div>
                         <div>ID da Turma: #{classGroup.id}</div>
                       </div>
@@ -277,20 +255,20 @@ function MyClassPage() {
                           <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                               <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
-                                {getResourceIcon(resource.resource_type)}
+                                {getResourceIcon(resource.resourceType)}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-2 mb-1">
                                   <h5 className="font-medium text-sm truncate">
-                                    {resource.resource_name}
+                                    {resource.name}
                                   </h5>
-                                  {getResourceBadge(resource.resource_type)}
+                                  {getResourceBadge(resource.resourceType)}
                                 </div>
                                 <p className="text-xs text-gray-500 line-clamp-2 mb-2">
-                                  {resource.resource_description}
+                                  {resource.description}
                                 </p>
                                 <div className="flex items-center gap-2 flex-wrap mb-2">
-                                  {resource.prior_access && (
+                                  {resource.previousAccess && (
                                     <Badge
                                       variant="outline"
                                       className="text-xs bg-green-50 text-green-700"
@@ -301,16 +279,16 @@ function MyClassPage() {
                                   <Badge
                                     variant="outline"
                                     className={`text-xs ${
-                                      resource.resource_type === "video"
+                                      resource.resourceType === "VIDEO"
                                         ? "bg-blue-50 text-blue-700"
-                                        : resource.resource_type === "pdf"
+                                        : resource.resourceType === "PDF"
                                           ? "bg-red-50 text-red-700"
                                           : "bg-green-50 text-green-700"
                                     }`}
                                   >
-                                    {resource.resource_type === "video"
+                                    {resource.resourceType === "VIDEO"
                                       ? "Clique para assistir"
-                                      : resource.resource_type === "pdf"
+                                      : resource.resourceType === "PDF"
                                         ? "Clique para visualizar"
                                         : "Clique para baixar"}
                                   </Badge>
@@ -325,12 +303,12 @@ function MyClassPage() {
                                       handleResourceClick(resource);
                                     }}
                                   >
-                                    {resource.resource_type === "video" ? (
+                                    {resource.resourceType === "VIDEO" ? (
                                       <>
                                         <Eye className="h-3 w-3 mr-1" />
                                         Assistir
                                       </>
-                                    ) : resource.resource_type === "pdf" ? (
+                                    ) : resource.resourceType === "PDF" ? (
                                       <>
                                         <FileText className="h-3 w-3 mr-1" />
                                         Abrir PDF
@@ -342,8 +320,8 @@ function MyClassPage() {
                                       </>
                                     )}
                                   </Button>
-                                  {(resource.resource_type === "pdf" ||
-                                    resource.resource_type === "video") && (
+                                  {(resource.resourceType === "PDF" ||
+                                    resource.resourceType === "VIDEO") && (
                                     <Button size="sm" variant="outline">
                                       <Download className="h-3 w-3" />
                                     </Button>
