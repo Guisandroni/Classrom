@@ -42,32 +42,31 @@ export function ClassGroupForm({
   onSubmit,
   isLoading,
 }: ClassGroupFormProps) {
-  console.log('teste')
   const [formData, setFormData] = useState<ClassGroupCreate>({
-    training: 0,
+    trainingId: 0,
     name: "",
-    start_date: "",
-    end_date: "",
-    access_link: "",
+    startDate: "",
+    endDate: "",
+    accessLink: "",
   });
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (classGroup) {
       setFormData({
-        training: classGroup.training,
+        trainingId: classGroup.trainingId,
         name: classGroup.name,
-        start_date: classGroup.start_date,
-        end_date: classGroup.end_date,
-        access_link: classGroup.access_link,
+        startDate: classGroup.startDate,
+        endDate: classGroup.endDate,
+        accessLink: classGroup.accessLink,
       });
     } else {
       setFormData({
-        training: 0,
+        trainingId: 0,
         name: "",
-        start_date: "",
-        end_date: "",
-        access_link: "",
+        startDate: "",
+        endDate: "",
+        accessLink: "",
       });
     }
     setError("");
@@ -75,11 +74,9 @@ export function ClassGroupForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("handleSubmit called");
     setError("");
 
-    if (!formData.training || formData.training === 0) {
-      console.log("Validation error: training is not selected");
+    if (!formData.trainingId || formData.trainingId === 0) {
       setError("Please select a training");
       return;
     }
@@ -89,12 +86,12 @@ export function ClassGroupForm({
       return;
     }
 
-    if (!formData.start_date || !formData.end_date) {
+    if (!formData.startDate || !formData.endDate) {
       setError("Please fill in the start and end dates");
       return;
     }
 
-    if (new Date(formData.start_date) >= new Date(formData.end_date)) {
+    if (new Date(formData.startDate) >= new Date(formData.endDate)) {
       setError("The end date must be after the start date");
       return;
     }
@@ -126,15 +123,14 @@ export function ClassGroupForm({
               <Label htmlFor="training">Training </Label>
               <Select
                 value={
-                  formData.training && formData.training > 0
-                    ? formData.training.toString()
+                  formData.trainingId && formData.trainingId > 0
+                    ? formData.trainingId.toString()
                     : ""
                 }
                 onValueChange={(value) => {
-                  console.log("onValueChange called with value:", value);
                   setFormData({
                     ...formData,
-                    training: Number.parseInt(value),
+                    trainingId: Number.parseInt(value),
                   });
                 }}
                 required
@@ -168,38 +164,38 @@ export function ClassGroupForm({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="start_date">Start Date </Label>
+                <Label htmlFor="startDate">Start Date </Label>
                 <Input
-                  id="start_date"
+                  id="startDate"
                   type="date"
-                  value={formData.start_date}
+                  value={formData.startDate}
                   onChange={(e) =>
-                    setFormData({ ...formData, start_date: e.target.value })
+                    setFormData({ ...formData, startDate: e.target.value })
                   }
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="end_date">End Date </Label>
+                <Label htmlFor="endDate">End Date </Label>
                 <Input
-                  id="end_date"
+                  id="endDate"
                   type="date"
-                  value={formData.end_date}
+                  value={formData.endDate}
                   onChange={(e) =>
-                    setFormData({ ...formData, end_date: e.target.value })
+                    setFormData({ ...formData, endDate: e.target.value })
                   }
                   required
                 />
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="access_link">Access Link</Label>
+              <Label htmlFor="accessLink">Access Link</Label>
               <Input
-                id="access_link"
+                id="accessLink"
                 type="url"
-                value={formData.access_link}
+                value={formData.accessLink}
                 onChange={(e) =>
-                  setFormData({ ...formData, access_link: e.target.value })
+                  setFormData({ ...formData, accessLink: e.target.value })
                 }
                 placeholder="https://classroom.example.com/..."
               />
