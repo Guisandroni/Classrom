@@ -32,7 +32,7 @@ export function VideoPlayerSheet({
     const videoUrl = getVideoUrl(resource);
     const link = document.createElement("a");
     link.href = videoUrl;
-    link.download = `${resource.resource_name}.mp4`;
+    link.download = `${resource.name}.mp4`;
     link.target = "_blank";
     document.body.appendChild(link);
     link.click();
@@ -51,10 +51,10 @@ export function VideoPlayerSheet({
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-xl">
-                {resource.resource_name}
+                {resource.name}
               </DialogTitle>
               <DialogDescription className="mt-2">
-                {resource.resource_description || "Sem descrição"}
+                {resource.description || "Sem descrição"}
               </DialogDescription>
             </div>
             <Button
