@@ -6,11 +6,12 @@ import {
 	type UseQueryResult,
 } from "@tanstack/react-query";
 import { authApi, studentsApi } from "../index";
-import type { Student, StudentCreate } from "@/types";
+import type { Student, StudentCreate, StudentUpdate, StudentMe } from "@/types";
 
+// Buscar todos os estudantes (apenas ADMIN)
 export const useStudents = (): UseQueryResult<Student[], Error> => {
 	const currentUser = authApi.getCurrentUser();
-	const isAdmin = currentUser?.role === "admin";
+	const isAdmin = currentUser?.role === "ADMIN";
 
 	return useQuery({
 		queryKey: ["students"],
@@ -22,6 +23,7 @@ export const useStudents = (): UseQueryResult<Student[], Error> => {
 	});
 };
 
+// Buscar estudante por ID
 export const useStudent = (id: number): UseQueryResult<Student, Error> => {
 	return useQuery({
 		queryKey: ["students", id],
@@ -30,6 +32,16 @@ export const useStudent = (id: number): UseQueryResult<Student, Error> => {
 	});
 };
 
+// Buscar dados do estudante autenticado
+export const useStudentMe = (): UseQueryResult<StudentMe, Error> => {
+	return useQuery({
+		queryKey: ["students", "me"],
+		queryFn: () => studentsApi.getMe(),
+		enabled: authApi.isAuthenticated() && authApi.isStudent(),
+	});
+};
+
+// Criar estudante
 export const useCreateStudent = (): UseMutationResult<
 	Student,
 	Error,
@@ -45,10 +57,11 @@ export const useCreateStudent = (): UseMutationResult<
 	});
 };
 
+// Atualizar estudante
 export const useUpdateStudent = (): UseMutationResult<
 	Student,
 	Error,
-	{ id: number; data: Partial<Student> }
+	{ id: number; data: StudentUpdate }
 > => {
 	const queryClient = useQueryClient();
 
@@ -61,6 +74,7 @@ export const useUpdateStudent = (): UseMutationResult<
 	});
 };
 
+// Deletar estudante
 export const useDeleteStudent = (): UseMutationResult<void, Error, number> => {
 	const queryClient = useQueryClient();
 
