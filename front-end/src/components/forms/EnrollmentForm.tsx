@@ -46,21 +46,21 @@ export function EnrollmentForm({
   mode = "create",
 }: EnrollmentFormProps) {
   const [formData, setFormData] = useState<EnrollmentCreate>({
-    class_group: 0,
-    student: 0,
+    classId: 0,
+    studentId: 0,
   });
 
   useEffect(() => {
     if (open) {
       if (mode === "edit" && initialData) {
         setFormData({
-          class_group: initialData.class_group,
-          student: initialData.student,
+          classId: initialData.classId,
+          studentId: initialData.studentId,
         });
       } else {
         setFormData({
-          class_group: 0,
-          student: 0,
+          classId: 0,
+          studentId: 0,
         });
       }
     }
@@ -68,7 +68,7 @@ export function EnrollmentForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.student > 0 && formData.class_group > 0) {
+    if (formData.studentId > 0 && formData.classId > 0) {
       onSubmit(formData);
     }
   };
@@ -92,10 +92,10 @@ export function EnrollmentForm({
               <Label htmlFor="student">Student </Label>
               <Select
                 value={
-                  formData.student > 0 ? formData.student.toString() : undefined
+                  formData.studentId > 0 ? formData.studentId.toString() : undefined
                 }
                 onValueChange={(value) =>
-                  setFormData({ ...formData, student: Number.parseInt(value) })
+                  setFormData({ ...formData, studentId: Number.parseInt(value) })
                 }
                 required
               >
@@ -112,17 +112,17 @@ export function EnrollmentForm({
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="class_group">Class </Label>
+              <Label htmlFor="classId">Class </Label>
               <Select
                 value={
-                  formData.class_group > 0
-                    ? formData.class_group.toString()
+                  formData.classId > 0
+                    ? formData.classId.toString()
                     : undefined
                 }
                 onValueChange={(value) =>
                   setFormData({
                     ...formData,
-                    class_group: Number.parseInt(value),
+                    classId: Number.parseInt(value),
                   })
                 }
                 required
@@ -136,7 +136,7 @@ export function EnrollmentForm({
                       key={classGroup.id}
                       value={classGroup.id.toString()}
                     >
-                      {classGroup.name} - {classGroup.training_name}
+                      {classGroup.name} - {classGroup.trainingName}
                     </SelectItem>
                   ))}
                 </SelectContent>
