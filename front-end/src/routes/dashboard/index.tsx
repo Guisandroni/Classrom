@@ -8,16 +8,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  BookOpen,
-  Users,
-  GraduationCap,
   Loader2,
-  Database,
   CheckCircle2,
 } from "lucide-react";
 import {
   useTrainings,
-  useStudents,
   useResources,
   useEnrollments,
   useMe,
@@ -31,43 +26,33 @@ export const Route = createFileRoute("/dashboard/")({
 
 function DashboardIndex() {
   const { data: me, isLoading: meLoading } = useMe(authApi.isAuthenticated());
-  const { data: allTrainings, isLoading: trainingsLoading } = useTrainings();
-  const { data: students, isLoading: studentsLoading } = useStudents();
+  const { data: allTrainings } = useTrainings();
   const { data: allResources, isLoading: resourcesLoading } = useResources();
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { data: classGroups, isLoading: classGroupsLoading } = useClassGroups();
 
   const isAdmin = authApi.isAdmin();
-  const isLoading =
-    trainingsLoading ||
-    studentsLoading ||
-    resourcesLoading ||
-    enrollmentsLoading ||
-    classGroupsLoading;
 
   let trainings = allTrainings;
   let resources = allResources;
 
   if (!isAdmin && enrollments && classGroups && allTrainings) {
-    const enrolledClassGroupIds = enrollments.map((e) => e.class_group);
+    const enrolledClassGroupIds = enrollments.map((e) => e.classId);
 
     const enrolledTrainingsIds = new Set(
       classGroups
         .filter((cg) => enrolledClassGroupIds.includes(cg.id))
-        .map((cg) => cg.training),
+        .map((cg) => cg.trainingId),
     );
 
     trainings = allTrainings.filter((t) => enrolledTrainingsIds.has(t.id));
-
-    let resources = classGroups || [];
   }
 
   const resourcesByType = isAdmin
     ? {
-        pdf: resources?.filter((r) => r.resource_type === "pdf").length || 0,
-        video:
-          resources?.filter((r) => r.resource_type === "video").length || 0,
-        zip: resources?.filter((r) => r.resource_type === "zip").length || 0,
+        pdf: resources?.filter((r) => r.resourceType === "PDF").length || 0,
+        video: resources?.filter((r) => r.resourceType === "VIDEO").length || 0,
+        zip: resources?.filter((r) => r.resourceType === "ZIP").length || 0,
         published: resources?.filter((r) => !r.draft).length || 0,
         drafts: resources?.filter((r) => r.draft).length || 0,
       }
@@ -83,7 +68,7 @@ function DashboardIndex() {
 
   let displayedClassGroups = classGroups;
   if (!isAdmin && enrollments && classGroups) {
-    const enrolledClassGroupIds = enrollments.map((e) => e.class_group);
+    const enrolledClassGroupIds = enrollments.map((e) => e.classId);
     displayedClassGroups = classGroups.filter((cg) =>
       enrolledClassGroupIds.includes(cg.id),
     );
@@ -144,10 +129,10 @@ function DashboardIndex() {
                   >
                     <div className="space-y-1">
                       <p className="font-medium text-sm">
-                        {enrollment.student_name}
+                        {enrollment.studentName}
                       </p>
                       <p className="text-sm text-gray-600">
-                        {enrollment.class_group_name}
+                        {enrollment.className}
                       </p>
                     </div>
                     <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
@@ -248,7 +233,7 @@ function DashboardIndex() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {displayedClassGroups.map((classGroup) => {
                   const training = trainings?.find(
-                    (t) => t.id === classGroup.training,
+                    (t) => t.id === classGroup.trainingId,
                   );
                   return (
                     <div
@@ -267,13 +252,13 @@ function DashboardIndex() {
                       <div className="text-xs text-gray-500 space-y-1">
                         <p>
                           Start:{" "}
-                          {new Date(classGroup.start_date).toLocaleDateString(
+                          {new Date(classGroup.startDate).toLocaleDateString(
                             "en-US",
                           )}
                         </p>
                         <p>
                           End:{" "}
-                          {new Date(classGroup.end_date).toLocaleDateString(
+                          {new Date(classGroup.endDate).toLocaleDateString(
                             "en-US",
                           )}
                         </p>
