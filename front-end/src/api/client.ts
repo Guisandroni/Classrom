@@ -3,9 +3,11 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 
+// URL base da API Spring Boot
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
 
+// Criação do cliente Axios com configuração base
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -13,14 +15,18 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
+// Interceptor de REQUEST - adiciona token de autenticação
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // Verifica se está no navegador
     if (typeof window === "undefined") {
       return config;
     }
 
+    // Busca o token de acesso do localStorage
     const token = localStorage.getItem("access_token");
 
+    // Se existe token, adiciona no header Authorization
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -32,6 +38,7 @@ apiClient.interceptors.request.use(
   },
 );
 
+// Interceptor de RESPONSE - trata erros e renova token
 apiClient.interceptors.response.use(
   (response) => {
     return response;
@@ -39,6 +46,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // Se erro 401 (não autorizado) e ainda não tentou renovar
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -46,22 +54,26 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
       }
 
+      // Tenta renovar o token usando refresh token
       const refreshToken = localStorage.getItem("refresh_token");
       if (refreshToken) {
         try {
           const response = await axios.post(
             `${API_BASE_URL}/auth/token/refresh`,
             {
-              refresh: refreshToken,
+              refreshToken: refreshToken,
             },
           );
 
-          const { access } = response.data;
-          localStorage.setItem("access_token", access);
+          // Salva novo access token
+          const { accessToken } = response.data;
+          localStorage.setItem("access_token", accessToken);
 
-          originalRequest.headers.Authorization = `Bearer ${access}`;
+          // Refaz a requisição original com novo token
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return apiClient(originalRequest);
         } catch (refreshError) {
+          // Falha ao renovar - limpa tokens e redireciona para login
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           localStorage.removeItem("current_user");
