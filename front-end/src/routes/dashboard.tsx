@@ -7,7 +7,6 @@ export const Route = createFileRoute("/dashboard")({
     if (typeof window === "undefined") {
       return;
     }
-    const token = localStorage.getItem("access_token");
     const isAuthenticated = authApi.isAuthenticated();
     const currentUser = authApi.getCurrentUser();
 
@@ -31,10 +30,10 @@ function DashboardLayoutWrapper() {
   }
 
   const dashboardUser = {
-    name: user.username || user.email || "Usuário",
+    name: user.name || user.email || "Usuário",
     email: user.email || "",
     avatar: "",
-    role: user.role || "student",
+    role: user.role === "ADMIN" ? "admin" as const : "student" as const,
   };
 
   return (
