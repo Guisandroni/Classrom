@@ -74,11 +74,11 @@ function ClassGroupsPage() {
   const enrichedClassGroups =
     classGroups?.map((classGroup) => {
       const enrollmentCount =
-        enrollments?.filter((e) => e.class_group === classGroup.id).length || 0;
+        enrollments?.filter((e) => e.classId === classGroup.id).length || 0;
 
       const now = new Date();
-      const startDate = new Date(classGroup.start_date);
-      const endDate = new Date(classGroup.end_date);
+      const startDate = new Date(classGroup.startDate);
+      const endDate = new Date(classGroup.endDate);
 
       let status: "upcoming" | "active" | "completed" = "upcoming";
       if (now >= startDate && now <= endDate) {
@@ -133,7 +133,7 @@ function ClassGroupsPage() {
   const filteredClassGroups = enrichedClassGroups.filter((classGroup) => {
     const matchesSearch =
       classGroup.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      classGroup.training_name
+      (classGroup.trainingName || "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
     return matchesSearch;
@@ -141,10 +141,8 @@ function ClassGroupsPage() {
 
 
   const handleCreate = () => {
-    console.log("handleCreate called");
     setSelectedClassGroup(null);
     setFormOpen(true);
-    console.log("formOpen set to true");
   };
 
   const handleEdit = (classGroup: ClassGroup) => {
@@ -325,10 +323,10 @@ function ClassGroupsPage() {
                         <GraduationCap className="h-4 w-4 text-blue-600" />
                         <div>
                           <div className="font-medium text-sm">
-                            {classGroup.training_name}
+                            {classGroup.trainingName}
                           </div>
                           <div className="text-xs text-gray-500">
-                            Training #{classGroup.training}
+                            Training #{classGroup.trainingId}
                           </div>
                         </div>
                       </div>
@@ -337,10 +335,10 @@ function ClassGroupsPage() {
                       <div className="space-y-1">
                         <div className="text-sm">
                           <Calendar className="h-3 w-3 inline mr-1" />
-                          {formatDate(classGroup.start_date)}
+                          {formatDate(classGroup.startDate)}
                         </div>
                         <div className="text-sm text-gray-500">
-                          to {formatDate(classGroup.end_date)}
+                          to {formatDate(classGroup.endDate)}
                         </div>
                       </div>
                     </TableCell>
