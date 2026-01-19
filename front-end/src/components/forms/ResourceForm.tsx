@@ -45,32 +45,32 @@ export function ResourceForm({
   isLoading,
 }: ResourceFormProps) {
   const [formData, setFormData] = useState<ResourceCreate>({
-    class_group: 0,
-    resource_type: "pdf",
-    prior_access: false,
+    classId: 0,
+    resourceType: "PDF",
+    previousAccess: false,
     draft: false,
-    resource_name: "",
-    resource_description: "",
+    name: "",
+    description: "",
   });
 
   useEffect(() => {
     if (resource) {
       setFormData({
-        class_group: resource.class_group,
-        resource_type: resource.resource_type,
-        prior_access: resource.prior_access,
+        classId: resource.classId,
+        resourceType: resource.resourceType,
+        previousAccess: resource.previousAccess,
         draft: resource.draft,
-        resource_name: resource.resource_name,
-        resource_description: resource.resource_description,
+        name: resource.name,
+        description: resource.description,
       });
     } else {
       setFormData({
-        class_group: 0,
-        resource_type: "pdf",
-        prior_access: false,
+        classId: 0,
+        resourceType: "PDF",
+        previousAccess: false,
         draft: false,
-        resource_name: "",
-        resource_description: "",
+        name: "",
+        description: "",
       });
     }
   }, [resource, open]);
@@ -96,13 +96,13 @@ export function ResourceForm({
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="class_group">Class </Label>
+              <Label htmlFor="classId">Class </Label>
               <Select
-                value={formData.class_group.toString()}
+                value={formData.classId.toString()}
                 onValueChange={(value) =>
                   setFormData({
                     ...formData,
-                    class_group: Number.parseInt(value),
+                    classId: Number.parseInt(value),
                   })
                 }
                 required
@@ -116,33 +116,33 @@ export function ResourceForm({
                       key={classGroup.id}
                       value={classGroup.id.toString()}
                     >
-                      {classGroup.name} ({classGroup.training_name})
+                      {classGroup.name} ({classGroup.trainingName})
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_name">Resource Name </Label>
+              <Label htmlFor="name">Resource Name </Label>
               <Input
-                id="resource_name"
-                value={formData.resource_name}
+                id="name"
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, resource_name: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
                 placeholder="E.g.: Lesson 1 - Introduction"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_description">Description</Label>
+              <Label htmlFor="description">Description</Label>
               <textarea
-                id="resource_description"
-                value={formData.resource_description}
+                id="description"
+                value={formData.description}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    resource_description: e.target.value,
+                    description: e.target.value,
                   })
                 }
                 placeholder="Resource description..."
@@ -151,13 +151,13 @@ export function ResourceForm({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="resource_type">Resource Type </Label>
+              <Label htmlFor="resourceType">Resource Type </Label>
               <Select
-                value={formData.resource_type}
+                value={formData.resourceType}
                 onValueChange={(value) =>
                   setFormData({
                     ...formData,
-                    resource_type: value as ResourceType,
+                    resourceType: value as ResourceType,
                   })
                 }
                 required
@@ -166,15 +166,15 @@ export function ResourceForm({
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="video">Video</SelectItem>
-                  <SelectItem value="pdf">PDF</SelectItem>
-                  <SelectItem value="zip">ZIP (Files)</SelectItem>
+                  <SelectItem value="VIDEO">Video</SelectItem>
+                  <SelectItem value="PDF">PDF</SelectItem>
+                  <SelectItem value="ZIP">ZIP (Files)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex items-center justify-between space-x-2">
               <Label
-                htmlFor="prior_access"
+                htmlFor="previousAccess"
                 className="flex flex-col items-start space-y-1"
               >
                 <span>Prior Access</span>
@@ -183,10 +183,10 @@ export function ResourceForm({
                 </span>
               </Label>
               <Switch
-                id="prior_access"
-                checked={formData.prior_access}
+                id="previousAccess"
+                checked={formData.previousAccess}
                 onCheckedChange={(checked) =>
-                  setFormData({ ...formData, prior_access: checked })
+                  setFormData({ ...formData, previousAccess: checked })
                 }
               />
             </div>
