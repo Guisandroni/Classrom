@@ -1,82 +1,87 @@
+// ============================================
+// TIPOS PARA API SPRING BOOT - Classroom Management
+// ============================================
+
+// --- Autenticação ---
 
 export interface User {
 	id: number;
-	username: string;
+	name: string;
 	email: string;
-	role: "admin" | "student";
-	is_staff: boolean;
+	phoneNumber: string;
+	role: "ADMIN" | "STUDENT";
 }
 
 export interface Tokens {
-	access: string;
-	refresh: string;
+	accessToken: string;
+	refreshToken: string;
 }
 
 export interface RegisterRequest {
-	username: string;
+	name: string;
 	email: string;
+	phoneNumber: string;
 	password: string;
-	password_confirm: string;
-	role: "admin" | "student";
-	first_name?: string;
-	last_name?: string;
-	student_name?: string;
-	student_phone?: string;
 }
 
-export interface RegisterResponse {
-	message: string;
-	user: {
-		id: number;
-		username: string;
-		email: string;
-		role: "admin" | "student";
-	};
-	tokens: Tokens;
+// Resposta real da API Spring Boot para login/registro
+export interface AuthResponse {
+	token: string;
+	type: string;
+	id: number;
+	name: string;
+	email: string;
+	phoneNumber: string;
+	role: "ADMIN" | "STUDENT";
 }
+
+export interface RegisterResponse extends AuthResponse {}
 
 export interface LoginRequest {
 	email: string;
 	password: string;
 }
 
-export interface LoginResponse {
-	access: string;
-	refresh: string;
-	user: {
-		id: number;
-		username: string;
-		email: string;
-		role: "admin" | "student";
-	};
-}
+export interface LoginResponse extends AuthResponse {}
 
 export interface RefreshTokenRequest {
-	refresh: string;
+	refreshToken: string;
 }
 
 export interface RefreshTokenResponse {
-	access: string;
+	accessToken: string;
 }
 
 export interface LogoutRequest {
-	refresh: string;
+	refreshToken: string;
 }
 
 export interface LogoutResponse {
 	message: string;
 }
 
-export interface UserMe {
+// --- Dados do usuário autenticado ---
+
+export interface StudentMe {
 	id: number;
-	user_id: number;
-	username: string;
-	email: string;
 	name: string;
-	phone: string;
-	role: "admin" | "student";
-	date_joined: string;
+	email: string;
+	phoneNumber: string;
+	enrollments: EnrollmentDetails[];
 }
+
+export interface EnrollmentDetails {
+	id: number;
+	classId: number;
+	className: string;
+	trainingId: number;
+	trainingName: string;
+	startDate: string;
+	endDate: string;
+	accessLink: string;
+}
+
+// --- Trainings (Treinamentos) ---
 
 export interface Training {
 	id: number;
@@ -94,100 +99,115 @@ export interface TrainingUpdate {
 	description: string;
 }
 
+// --- Classes (Aulas) ---
+
 export interface ClassGroup {
 	id: number;
-	training: number;
-	training_name: string;
+	trainingId: number;
+	trainingName?: string;
 	name: string;
-	start_date: string;
-	end_date: string;
-	access_link: string;
+	startDate: string;
+	endDate: string;
+	accessLink: string;
 	resources?: Resource[];
 }
 
 export interface ClassGroupCreate {
-	training: number;
+	trainingId: number;
 	name: string;
-	start_date: string;
-	end_date: string;
-	access_link: string;
+	startDate: string;
+	endDate: string;
+	accessLink: string;
 }
 
 export interface ClassGroupUpdate {
-	training: number;
+	trainingId: number;
 	name: string;
-	start_date: string;
-	end_date: string;
-	access_link: string;
+	startDate: string;
+	endDate: string;
+	accessLink: string;
 }
 
-export type ResourceType = "video" | "pdf" | "zip";
+// --- Resources (Recursos/Materiais) ---
+
+export type ResourceType = "VIDEO" | "PDF" | "ZIP";
 
 export interface Resource {
 	id: number;
-	class_group: number;
-	class_group_name: string;
-	resource_type: ResourceType;
-	prior_access: boolean;
+	classId: number;
+	className?: string;
+	resourceType: ResourceType;
+	previousAccess: boolean;
 	draft: boolean;
-	resource_name: string;
-	resource_description: string;
+	name: string;
+	description: string;
 }
 
 export interface ResourceCreate {
-	class_group: number;
-	resource_type: ResourceType;
-	prior_access: boolean;
+	classId: number;
+	resourceType: ResourceType;
+	previousAccess: boolean;
 	draft: boolean;
-	resource_name: string;
-	resource_description: string;
+	name: string;
+	description: string;
 }
 
 export interface ResourceUpdate {
-	class_group: number;
-	resource_type: ResourceType;
-	prior_access: boolean;
+	classId: number;
+	resourceType: ResourceType;
+	previousAccess: boolean;
 	draft: boolean;
-	resource_name: string;
-	resource_description: string;
+	name: string;
+	description: string;
 }
+
+// --- Students (Estudantes) ---
 
 export interface Student {
 	id: number;
-	user: number;
 	name: string;
-	phone: string;
 	email: string;
-	username: string;
+	phoneNumber: string;
+	enrollments?: EnrollmentDetails[];
 }
 
 export interface StudentCreate {
 	name: string;
 	email: string;
-	username: string;
-	phone?: string;
+	phoneNumber: string;
 }
+
+export interface StudentUpdate {
+	name: string;
+	email: string;
+	phoneNumber: string;
+}
+
+// --- Enrollments (Matrículas) ---
 
 export interface Enrollment {
 	id: number;
-	class_group: number;
-	student: number;
-	class_group_name: string;
-	student_name: string;
+	classId: number;
+	studentId: number;
+	className?: string;
+	studentName?: string;
 }
 
 export interface EnrollmentCreate {
-	class_group: number;
-	student: number;
+	classId: number;
+	studentId: number;
 }
 
 export interface EnrollmentUpdate {
-	class_group: number;
-	student: number;
+	classId: number;
+	studentId: number;
 }
 
+// --- Erros da API ---
+
 export interface ApiError {
-	detail?: string;
 	message?: string;
-	[key: string]: any;
+	error?: string;
+	status?: number;
+	[key: string]: unknown;
 }
