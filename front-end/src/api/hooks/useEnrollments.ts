@@ -6,12 +6,9 @@ import {
 	type UseQueryResult,
 } from "@tanstack/react-query";
 import { authApi, enrollmentsApi } from "../index";
-import type {
-	Enrollment,
-	EnrollmentCreate,
-	EnrollmentUpdate,
-} from "@/types";
+import type { Enrollment, EnrollmentCreate } from "@/types";
 
+// Buscar todas as matrículas
 export const useEnrollments = (): UseQueryResult<Enrollment[], Error> => {
 	return useQuery({
 		queryKey: ["enrollments"],
@@ -23,6 +20,7 @@ export const useEnrollments = (): UseQueryResult<Enrollment[], Error> => {
 	});
 };
 
+// Buscar matrícula por ID
 export const useEnrollment = (
 	id: number,
 ): UseQueryResult<Enrollment, Error> => {
@@ -33,6 +31,38 @@ export const useEnrollment = (
 	});
 };
 
+// Buscar matrículas do usuário autenticado
+export const useMyEnrollments = (): UseQueryResult<Enrollment[], Error> => {
+	return useQuery({
+		queryKey: ["enrollments", "my"],
+		queryFn: () => enrollmentsApi.getMy(),
+		enabled: authApi.isAuthenticated() && authApi.isStudent(),
+	});
+};
+
+// Buscar matrículas por aula
+export const useEnrollmentsByClass = (
+	classId: number,
+): UseQueryResult<Enrollment[], Error> => {
+	return useQuery({
+		queryKey: ["enrollments", "class", classId],
+		queryFn: () => enrollmentsApi.getByClass(classId),
+		enabled: !!classId,
+	});
+};
+
+// Buscar matrículas por estudante
+export const useEnrollmentsByStudent = (
+	studentId: number,
+): UseQueryResult<Enrollment[], Error> => {
+	return useQuery({
+		queryKey: ["enrollments", "student", studentId],
+		queryFn: () => enrollmentsApi.getByStudent(studentId),
+		enabled: !!studentId,
+	});
+};
+
+// Criar matrícula
 export const useCreateEnrollment = (): UseMutationResult<
 	Enrollment,
 	Error,
@@ -48,22 +78,7 @@ export const useCreateEnrollment = (): UseMutationResult<
 	});
 };
 
-export const useUpdateEnrollment = (): UseMutationResult<
-	Enrollment,
-	Error,
-	{ id: number; data: EnrollmentUpdate }
-> => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: ({ id, data }) => enrollmentsApi.update(id, data),
-		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({ queryKey: ["enrollments"] });
-			queryClient.invalidateQueries({ queryKey: ["enrollments", variables.id] });
-		},
-	});
-};
-
+// Deletar matrícula
 export const useDeleteEnrollment = (): UseMutationResult<
 	void,
 	Error,
