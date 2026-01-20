@@ -32,7 +32,26 @@ Sistema de gerenciamento de sala de aula com autenticação JWT, desenvolvido co
 
 ---
 
-## Instruções para Executar
+## Executar com Docker (Recomendado)
+
+A forma mais simples de executar a aplicação completa:
+
+```bash
+docker compose up --build
+```
+
+Acesse:
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:8080
+
+Para parar:
+```bash
+docker compose down
+```
+
+---
+
+## Executar Localmente (Desenvolvimento)
 
 ### Pré-requisitos
 
