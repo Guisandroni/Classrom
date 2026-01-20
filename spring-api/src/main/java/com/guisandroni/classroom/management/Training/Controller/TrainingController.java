@@ -26,13 +26,13 @@ public class TrainingController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userAuth.isEnrolledInTraining(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @userAuthService.isEnrolledInTraining(#id)")
     public ResponseEntity<TrainingResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(trainingService.findById(id));
     }
 
     @GetMapping("/my")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<List<TrainingResponse>> findMyTrainings() {
         return ResponseEntity.ok(trainingService.findTrainingsForCurrentUser());
     }

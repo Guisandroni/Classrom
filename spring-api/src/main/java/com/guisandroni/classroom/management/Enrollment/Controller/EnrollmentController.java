@@ -20,27 +20,32 @@ public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<EnrollmentResponse>> findAll() {
         return ResponseEntity.ok(enrollmentService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EnrollmentResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(enrollmentService.findById(id));
     }
 
     @GetMapping("/class/{classId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<EnrollmentResponse>> findByClassId(@PathVariable Long classId) {
         return ResponseEntity.ok(enrollmentService.findByClassId(classId));
     }
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EnrollmentResponse> create(@Valid @RequestBody EnrollmentRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentService.create(request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         enrollmentService.delete(id);
         return ResponseEntity.noContent().build();

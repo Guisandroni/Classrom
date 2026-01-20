@@ -20,32 +20,38 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<StudentResponse>> findAll() {
         return ResponseEntity.ok(studentService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.findById(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.create(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponse> update(@PathVariable Long id, @Valid @RequestBody StudentRequest request) {
         return ResponseEntity.ok(studentService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         studentService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<StudentResponse> findCurrentStudent() {
         return ResponseEntity.ok(studentService.findCurrentStudent());
     }

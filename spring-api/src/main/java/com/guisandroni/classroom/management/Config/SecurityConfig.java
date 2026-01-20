@@ -33,12 +33,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Rotas públicas
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
-//                        .requestMatchers("/api/trainings").hasRole("user")
-//                        .requestMatchers("/api/classes").hasRole("user")
-//                        .requestMatchers("/api/*").hasRole("admin")
+                        .requestMatchers("/actuator/health").permitAll()
 
+                        .requestMatchers("/api/students").hasRole("ADMIN")
+                        .requestMatchers("/api/students/{id}").hasRole("ADMIN")
+                        .requestMatchers("/api/classes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/resources/**").hasRole("ADMIN")
+                        .requestMatchers("/api/enrollments/**").hasRole("ADMIN")
+
+                        .requestMatchers("/api/students/me").hasAnyRole("STUDENT", "ADMIN")
+                        .requestMatchers("/api/trainings/my").hasAnyRole("STUDENT", "ADMIN")
+
+                        // Qualquer outra rota autenticada
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
