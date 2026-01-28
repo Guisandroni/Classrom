@@ -14,22 +14,22 @@
 -- 1. USERS (Usuários para autenticação)
 -- ============================================
 -- Senha padrão: "password123" (BCrypt encoded)
--- $2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i
+-- $2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2
 
 INSERT INTO users (name, email, phone_number, password, role, created_at, updated_at) VALUES
 -- Administradores
-('Admin Sistema', 'admin@classroom.com', '11999990001', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Maria Gestora', 'maria.gestora@classroom.com', '11999990002', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Admin Sistema', 'admin@classroom.com', '11999990001', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Maria Gestora', 'maria.gestora@classroom.com', '11999990002', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Estudantes
-('João Silva', 'joao.silva@email.com', '11988881001', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Ana Santos', 'ana.santos@email.com', '11988881002', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Carlos Oliveira', 'carlos.oliveira@email.com', '11988881003', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Fernanda Lima', 'fernanda.lima@email.com', '11988881004', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Pedro Costa', 'pedro.costa@email.com', '11988881005', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Juliana Mendes', 'juliana.mendes@email.com', '11988881006', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Roberto Almeida', 'roberto.almeida@email.com', '11988881007', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Camila Rocha', 'camila.rocha@email.com', '11988881008', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IH5J8h.8M5l.D.YtFjj.K2WJBm6E2i', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('João Silva', 'joao.silva@email.com', '11988881001', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Ana Santos', 'ana.santos@email.com', '11988881002', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Carlos Oliveira', 'carlos.oliveira@email.com', '11988881003', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Fernanda Lima', 'fernanda.lima@email.com', '11988881004', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Pedro Costa', 'pedro.costa@email.com', '11988881005', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Juliana Mendes', 'juliana.mendes@email.com', '11988881006', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Roberto Almeida', 'roberto.almeida@email.com', '11988881007', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Camila Rocha', 'camila.rocha@email.com', '11988881008', '$2a$10$dc5cJyphV6Ug0VmISA7idOmArMDM4WhBEQfq7AW7KXfKyvwocgnH2', 'STUDENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- ============================================
 -- 2. STUDENTS (Estudantes - espelho dos users com role STUDENT)
@@ -94,7 +94,7 @@ INSERT INTO classes (training_id, name, start_date, end_date, access_link) VALUE
 -- Classes do Training 6: Segurança da Informação
 (6, 'Fundamentos de Segurança', '2026-03-17 14:00:00', '2026-03-17 17:00:00', 'https://meet.classroom.com/sec-fund'),
 (6, 'OWASP Top 10', '2026-03-19 14:00:00', '2026-03-19 17:00:00', 'https://meet.classroom.com/sec-owasp'),
-(6, 'Autenticação e JWT', '2026-03-21 14:00:00', '2026-03-21 17:00:00', 'https://meet.classroom.com/sec-jwt');
+(6, 'Autenticação e JWT', '2026-03-21 14:00:00', '2026-03-21 17:00:00', 'https://meet.classroom.com/sec-jwt'),
 
 -- ============================================
 -- 5. RESOURCES (Recursos das aulas)
@@ -142,7 +142,7 @@ INSERT INTO resources (class_id, resource_type, previous_access, draft, name, de
 
 -- Recursos em rascunho (draft)
 (1, 'PDF', false, true, 'CSS Avançado (Rascunho)', 'Material em desenvolvimento sobre CSS Grid e Flexbox'),
-(5, 'VIDEO', false, true, 'Spring AOP (Rascunho)', 'Aula em preparação sobre Aspect-Oriented Programming');
+(5, 'VIDEO', false, true, 'Spring AOP (Rascunho)', 'Aula em preparação sobre Aspect-Oriented Programming'),
 
 -- ============================================
 -- 6. ENROLLMENTS (Matrículas)
